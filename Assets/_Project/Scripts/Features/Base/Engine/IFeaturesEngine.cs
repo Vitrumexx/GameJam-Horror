@@ -1,6 +1,6 @@
 namespace _Project.Scripts.Features.Base.Engine
 {
-    public interface IFeatureEngine
+    public interface IFeaturesEngine
     {
         void Initialize();
         void Update();

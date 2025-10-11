@@ -1,11 +1,10 @@
-using System;
 using _Project.Scripts.Features.Base.Interfaces;
 using UnityEngine;
 using Zenject;
 
 namespace _Project.Scripts.Features.Base.Engine
 {
-    public class MonoFeatureEngine : MonoBehaviour, IFeatureEngine
+    public class MonoFeaturesEngine : MonoBehaviour, IFeaturesEngine
     {
         public IInitializableFeature[] InitializableFeatures { get; private set; }
         public IUpdatableFeature[] UpdatableFeatures { get; private set; }
