@@ -276,6 +276,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e935357e16b498b84329fdd97eaa2ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1438320430 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3760427210066692164, guid: 62761072c5266da4b8d0e64e3d9b1233, type: 3}
+  m_PrefabInstance: {fileID: 6171028137522787733}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1529872403
 GameObject:
   m_ObjectHideFlags: 0
@@ -526,8 +531,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers: []
-  _monoInstallers:
-  - {fileID: 175448187}
+  _monoInstallers: []
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -615,11 +619,63 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3760427210066692164, guid: 62761072c5266da4b8d0e64e3d9b1233, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6171028137522787736}
+    - targetCorrespondingSourceObject: {fileID: 3760427210066692164, guid: 62761072c5266da4b8d0e64e3d9b1233, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6171028137522787735}
   m_SourcePrefab: {fileID: 100100000, guid: 62761072c5266da4b8d0e64e3d9b1233, type: 3}
 --- !u!4 &6171028137522787734 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8178355071462918652, guid: 62761072c5266da4b8d0e64e3d9b1233, type: 3}
+  m_PrefabInstance: {fileID: 6171028137522787733}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6171028137522787735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1438320430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8788b84f9da147eb8ea510d6912cce34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  config: {fileID: 11400000, guid: 1d413ff82f46bec4db2346d68008f871, type: 2}
+  characterController: {fileID: 6171028137522787737}
+--- !u!54 &6171028137522787736
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1438320430}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 80
+  m_CollisionDetection: 0
+--- !u!143 &6171028137522787737 stripped
+CharacterController:
+  m_CorrespondingSourceObject: {fileID: 4657175094816042451, guid: 62761072c5266da4b8d0e64e3d9b1233, type: 3}
   m_PrefabInstance: {fileID: 6171028137522787733}
   m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
