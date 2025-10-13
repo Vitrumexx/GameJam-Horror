@@ -14,6 +14,7 @@ namespace _Project.Scripts.Features.Inventory
         public SoundsPlayer soundsPlayer;
         public PlayerNotifier playerNotifier;
         public ItemsStorage itemsStorage;
+        public ItemsRegistrator itemsRegistrator;
         
         [Header("Transform")]
         public Transform playerHandTransform;
@@ -39,6 +40,7 @@ namespace _Project.Scripts.Features.Inventory
             if (!IsNeededProcessing()) return;
             
             HandleInventorySlotSelected();
+            HandleItemsToPickUp();
         }
 
         private bool IsNeededProcessing()
@@ -91,6 +93,24 @@ namespace _Project.Scripts.Features.Inventory
                     OnChangeSelectedSlot(i);
                 }
             }
+        }
+
+        private void HandleItemsToPickUp() // TODO: make it not updated every frame
+        {
+            if (!itemsRegistrator.TryGetNearest(playerHandTransform.position, out var nearestItem, out var distance))
+            {
+                return;
+            }
+
+            if (distance > config.pickUpDistance) return;
+
+            if (!itemsStorage.TryGetItemStorableUnit(nearestItem.id, out var itemStorableUnit))
+            {
+                return;
+            }
+
+            playerNotifier.NotifyPlayer($"Чтобы поднять предмет, нажмите {config.pickUpItemKey}.",
+                itemStorableUnit.icon);
         }
 
         private void OnChangeSelectedSlot(int slot)
@@ -152,9 +172,16 @@ namespace _Project.Scripts.Features.Inventory
             item.Drop(droppedItemParentTransform);
             _inventory[_selectedSlot] = null;
 
-            if (itemsStorage.TryGetItemStorableUnit(item.id, out var itemStorableUnit))
+            if (!itemsStorage.TryGetItemStorableUnit(item.id, out var itemStorableUnit))
             {
-                soundsPlayer.PlayClip(inventoryAudioSource, itemStorableUnit.soundId);
+                return;
+            }
+            
+            soundsPlayer.PlayClip(inventoryAudioSource, itemStorableUnit.soundId);
+                
+            if (itemStorableUnit.itemWeight == ItemStorableUnit.ItemWeight.Heavy)
+            {
+                _enemyNotifier.NotifyEnemy(); // TODO : rework it
             }
         }
 
