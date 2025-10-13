@@ -1,14 +1,18 @@
-using Sirenix.OdinInspector;
+using System;
 using UnityEngine;
 
 namespace _Project.Scripts.Features.Player
 {
-    [InfoBox("Оповещения для игрока (всплывающие уведомления)")]
-    public class PlayerNotifier: MonoBehaviour
+    public class PlayerNotifier : MonoBehaviour
     {
         public void NotifyPlayer(string msg)
         {
-            
+            throw new NotImplementedException();
+        }
+
+        public void NotifyPlayer(string msg, Sprite sprite)
+        {
+            throw new NotImplementedException();
         }
     }
 }
