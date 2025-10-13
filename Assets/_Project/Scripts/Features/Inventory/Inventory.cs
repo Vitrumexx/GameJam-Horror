@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using _Project.Scripts.Features.Enemy;
 using _Project.Scripts.Features.Items;
+using _Project.Scripts.Features.Player;
 using _Project.Scripts.Features.Sounds;
 using UnityEngine;
 
@@ -8,91 +10,159 @@ namespace _Project.Scripts.Features.Inventory
 {
     public class Inventory : MonoBehaviour
     { 
-        [Header("Sounds")]
-        public SoundsStorage soundsStorage;
-        public AudioSource audioSource;
+        [Header("Services")]
+        public SoundsPlayer soundsPlayer;
+        public PlayerNotifier playerNotifier;
+        public ItemsStorage itemsStorage;
         
         [Header("Transform")]
         public Transform playerHandTransform;
         public Transform droppedItemParentTransform;
         
         [Header("Inventory config")]
-        [SerializeField] private InventoryConfig config;
+        public AudioSource inventoryAudioSource;
+        public InventoryConfig config;
         
-        private List<KeyValuePair<int, Item>> _inventory;
-        
-        public List<Item> Items { get; private set; } = new();
-        public int SelectedIndex { get; private set; } = -1;
-
-        public Item SelectedItem
-        {
-            get
-            {
-                if (SelectedIndex >= 0 && SelectedIndex < Items.Count) return Items[SelectedIndex];
-                
-                return null;
-            }
-        }
+        private Dictionary<int, Item> _inventory;
+        private int _selectedSlot = 0;
 
         private EnemyNotifier _enemyNotifier;
+        private bool _isInventoryVisible = true; 
 
         private void Start()
         {
             _enemyNotifier = FindAnyObjectByType<EnemyNotifier>();
         }
 
-        public void PickUpItem(Item item)
+        private void Update()
         {
-            if (Items.Count >= inventoryCapacity)
+            if (!IsNeededProcessing()) return;
+            
+            HandleInventorySlotSelected();
+        }
+
+        private bool IsNeededProcessing()
+        {
+            if (config.inventoryCapacity <= 0)
             {
-                SendMessageToPlayer("Инвентарь полон!");
+                if (_isInventoryVisible)
+                {
+                    HideInventory();
+                }
+
+                return false;
+            }
+
+            if (!_isInventoryVisible)
+            {
+                ShowInventory();
+            }
+            
+            return true;
+        }
+
+        private void HideInventory()
+        {
+            _isInventoryVisible = false;
+            _inventory.Clear();
+            
+            // TODO:Add hide inventory
+        }
+
+        private void ShowInventory()
+        {
+            _isInventoryVisible = true;
+
+            for (var i = 0; i < config.inventoryCapacity; i++)
+            {
+                _inventory.TryAdd(i, null);
+            }
+
+            // TODO:Add show inventory
+        }
+
+        private void HandleInventorySlotSelected()
+        {
+            for (var i = 0; i < 10; i++)
+            {
+                var key = KeyCode.Alpha0 + i;
+                if (Input.GetKeyDown(key))
+                {
+                    OnChangeSelectedSlot(i);
+                }
+            }
+        }
+
+        private void OnChangeSelectedSlot(int slot)
+        {
+            if (slot <= 0 || slot > config.inventoryCapacity)
+            {
                 return;
             }
             
-            Items.Add(item);
+            // TODO: Add processing for change slot
+        }
+
+        public void PickUpItem(Item item)
+        {
+            var insertKey = -1;
             
-            item.transform.SetParent(playerHandTransform);
-            item.Collider.enabled = false;
-            item.Rigidbody.useGravity = false;
+            if (_inventory[_selectedSlot] == null)
+            {
+                insertKey = _selectedSlot;
+            }
+            else
+            {
+                var sortedInventory = GetSortedInventory();
+
+                foreach (var keyValuePair in sortedInventory.Where(keyValuePair => keyValuePair.Value == null))
+                {
+                    insertKey = keyValuePair.Key;
+                }
+            }
+
+            if (insertKey < 0)
+            {
+                playerNotifier.NotifyPlayer("В инвентаре недостаточно мест.");
+                return;
+            }
             
-            if (!isPickUpClipExist) return;
-            if (!soundsStorage.Items.TryGetValue(pickUpClipId, out var sound)) return;
-            
-            audioSource.volume = sound.volume;
-            audioSource.PlayOneShot(sound.clip);
+            item.PickUp(playerHandTransform);
+            _inventory[insertKey] = item;
+
+            if (config.isPickUpClipExist)
+            {
+                soundsPlayer.PlayClip(inventoryAudioSource, config.pickUpClipId);
+            }
         }
 
         public void DropItem()
         {
-            var item = SelectedItem;
-            
-            if (item == null)
+            if (!_inventory.TryGetValue(_selectedSlot, out var item))
             {
-                SendMessageToPlayer("Твоя рука пуста.");
                 return;
             }
             
-            Items.Remove(item);
-            
-            item.transform.SetParent(droppedItemParentTransform);
-            item.Collider.enabled = true;
-            item.Rigidbody.useGravity = true;
-
-            if (soundsStorage.Items.TryGetValue(item.soundId, out var sound))
+            if (item == null)
             {
-                audioSource.volume = sound.volume;
-                audioSource.PlayOneShot(sound.clip);
+                playerNotifier.NotifyPlayer("Твоя рука пуста.");
+                return;
             }
             
-            if (item.itemWeight == Item.ItemWeight.Heavy)
+            item.Drop(droppedItemParentTransform);
+            _inventory[_selectedSlot] = null;
+
+            if (itemsStorage.TryGetItemStorableUnit(item.id, out var itemStorableUnit))
             {
-                _enemyNotifier.NotifyEnemy();
+                soundsPlayer.PlayClip(inventoryAudioSource, itemStorableUnit.soundId);
             }
         }
 
-        public void SendMessageToPlayer(string msg)
+        private List<KeyValuePair<int, Item>> GetSortedInventory()
         {
-            
+            var inventory = _inventory.ToList();
+            inventory.Sort((x, y) => x.Key.CompareTo(y.Key));
+            return inventory;
         }
     }
 }
