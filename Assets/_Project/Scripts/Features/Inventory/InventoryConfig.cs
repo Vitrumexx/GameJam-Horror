@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace _Project.Scripts.Features.Inventory
@@ -6,6 +7,8 @@ namespace _Project.Scripts.Features.Inventory
     {
         public bool isPickUpClipExist = false;
         public string pickUpClipId = "pickup";
-        public int inventoryCapacity = 1;
+        [MinMaxSlider(0,10,true)]public int inventoryCapacity = 1;
+        public KeyCode pickUpItemKey = KeyCode.E;
+        public KeyCode dropItemKey = KeyCode.Q;
     }
 }
