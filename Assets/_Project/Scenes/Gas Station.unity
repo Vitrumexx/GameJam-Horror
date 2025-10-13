@@ -38,11 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-<<<<<<< HEAD:Assets/_Project/Scenes/Gas Station.unity
   m_IndirectSpecularColor: {r: 0.4444971, g: 0.49398547, b: 0.5732865, a: 1}
-=======
-  m_IndirectSpecularColor: {r: 0.44896328, g: 0.49902725, b: 0.57570887, a: 1}
->>>>>>> b6653c28b602a7af7431500ec90423f22db41b29:Assets/Scenes/Gas Station.unity
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -674,11 +670,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-<<<<<<< HEAD:Assets/_Project/Scenes/Gas Station.unity
   m_IsActive: 1
-=======
-  m_IsActive: 0
->>>>>>> b6653c28b602a7af7431500ec90423f22db41b29:Assets/Scenes/Gas Station.unity
 --- !u!4 &175946269
 Transform:
   m_ObjectHideFlags: 0
@@ -1231,11 +1223,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-<<<<<<< HEAD:Assets/_Project/Scenes/Gas Station.unity
   m_IsActive: 1
-=======
-  m_IsActive: 0
->>>>>>> b6653c28b602a7af7431500ec90423f22db41b29:Assets/Scenes/Gas Station.unity
 --- !u!4 &296301000
 Transform:
   m_ObjectHideFlags: 0
@@ -2605,11 +2593,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-<<<<<<< HEAD:Assets/_Project/Scenes/Gas Station.unity
   m_IsActive: 1
-=======
-  m_IsActive: 0
->>>>>>> b6653c28b602a7af7431500ec90423f22db41b29:Assets/Scenes/Gas Station.unity
 --- !u!4 &453780445
 Transform:
   m_ObjectHideFlags: 0
@@ -2703,11 +2687,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-<<<<<<< HEAD:Assets/_Project/Scenes/Gas Station.unity
   m_IsActive: 1
-=======
-  m_IsActive: 0
->>>>>>> b6653c28b602a7af7431500ec90423f22db41b29:Assets/Scenes/Gas Station.unity
 --- !u!4 &488368205
 Transform:
   m_ObjectHideFlags: 0
@@ -3343,11 +3323,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-<<<<<<< HEAD:Assets/_Project/Scenes/Gas Station.unity
   m_IsActive: 1
-=======
-  m_IsActive: 0
->>>>>>> b6653c28b602a7af7431500ec90423f22db41b29:Assets/Scenes/Gas Station.unity
 --- !u!4 &561867587
 Transform:
   m_ObjectHideFlags: 0
@@ -4105,11 +4081,8 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-<<<<<<< HEAD:Assets/_Project/Scenes/Gas Station.unity
   m_IsActive: 1
-=======
   m_IsActive: 0
->>>>>>> b6653c28b602a7af7431500ec90423f22db41b29:Assets/Scenes/Gas Station.unity
 --- !u!4 &674001031
 Transform:
   m_ObjectHideFlags: 0
@@ -5431,11 +5404,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-<<<<<<< HEAD:Assets/_Project/Scenes/Gas Station.unity
   m_IsActive: 1
-=======
-  m_IsActive: 0
->>>>>>> b6653c28b602a7af7431500ec90423f22db41b29:Assets/Scenes/Gas Station.unity
 --- !u!4 &997690042
 Transform:
   m_ObjectHideFlags: 0
@@ -6773,11 +6742,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-<<<<<<< HEAD:Assets/_Project/Scenes/Gas Station.unity
   m_IsActive: 1
-=======
-  m_IsActive: 0
->>>>>>> b6653c28b602a7af7431500ec90423f22db41b29:Assets/Scenes/Gas Station.unity
 --- !u!4 &1262425499
 Transform:
   m_ObjectHideFlags: 0
@@ -7720,11 +7685,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-<<<<<<< HEAD:Assets/_Project/Scenes/Gas Station.unity
   m_IsActive: 1
-=======
-  m_IsActive: 0
->>>>>>> b6653c28b602a7af7431500ec90423f22db41b29:Assets/Scenes/Gas Station.unity
 --- !u!4 &1467395740
 Transform:
   m_ObjectHideFlags: 0
@@ -9411,11 +9372,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-<<<<<<< HEAD:Assets/_Project/Scenes/Gas Station.unity
   m_IsActive: 1
-=======
-  m_IsActive: 0
->>>>>>> b6653c28b602a7af7431500ec90423f22db41b29:Assets/Scenes/Gas Station.unity
 --- !u!4 &1888777490
 Transform:
   m_ObjectHideFlags: 0
@@ -9663,21 +9620,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1903382755}
   serializedVersion: 2
-<<<<<<< HEAD:Assets/_Project/Scenes/Gas Station.unity
   m_LocalRotation: {x: 0.78870636, y: -0.23348473, z: -0.11168034, w: 0.55763316}
-=======
-  m_LocalRotation: {x: 0.8764967, y: -0.24982335, z: -0.06764539, w: 0.40591374}
->>>>>>> b6653c28b602a7af7431500ec90423f22db41b29:Assets/Scenes/Gas Station.unity
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-<<<<<<< HEAD:Assets/_Project/Scenes/Gas Station.unity
   m_LocalEulerAnglesHint: {x: 55.839, y: -128.97, z: -118.631}
-=======
-  m_LocalEulerAnglesHint: {x: 42.669, y: -154.081, z: -137.91}
->>>>>>> b6653c28b602a7af7431500ec90423f22db41b29:Assets/Scenes/Gas Station.unity
 --- !u!1 &1904409510
 GameObject:
   m_ObjectHideFlags: 0
@@ -10931,11 +10880,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-<<<<<<< HEAD:Assets/_Project/Scenes/Gas Station.unity
   m_IsActive: 1
-=======
-  m_IsActive: 0
->>>>>>> b6653c28b602a7af7431500ec90423f22db41b29:Assets/Scenes/Gas Station.unity
 --- !u!4 &2037138513
 Transform:
   m_ObjectHideFlags: 0
@@ -11383,11 +11328,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-<<<<<<< HEAD:Assets/_Project/Scenes/Gas Station.unity
   m_IsActive: 1
-=======
-  m_IsActive: 0
->>>>>>> b6653c28b602a7af7431500ec90423f22db41b29:Assets/Scenes/Gas Station.unity
 --- !u!4 &2110327137
 Transform:
   m_ObjectHideFlags: 0
