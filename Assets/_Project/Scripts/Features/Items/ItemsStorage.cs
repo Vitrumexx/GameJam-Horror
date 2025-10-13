@@ -5,7 +5,7 @@ namespace _Project.Scripts.Features.Items
 {
     public class ItemsStorage : MonoStorage<ItemStorableUnit>
     {
-        public bool TryGetSoundStorableUnit(string itemId, out ItemStorableUnit storableUnit)
+        public bool TryGetItemStorableUnit(string itemId, out ItemStorableUnit storableUnit)
         {
             if (!Units.TryGetValue(itemId, out storableUnit))
             {
