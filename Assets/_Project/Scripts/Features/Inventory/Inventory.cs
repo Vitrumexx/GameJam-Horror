@@ -26,10 +26,11 @@ namespace _Project.Scripts.Features.Inventory
         public InventoryConfig config;
         
         [Header("UI")]
-        public CanvasGroup inventory;
+        public CanvasGroup inventoryUI;
+        public GameObject inventoryUnitPrefab;
         public UIInfoArea hintArea;
         
-        private Dictionary<int, Item> _inventory;
+        private Dictionary<int, ItemInventoryUnit> _inventory;
         private int _selectedSlot = 0;
         private Item _pickUpHintItem;
 
@@ -48,6 +49,28 @@ namespace _Project.Scripts.Features.Inventory
             
             HandleInventorySlotSelected();
             HandleItemsToPickUp();
+            HandlePickUp();
+            HandleDrop();
+        }
+
+        private void HandlePickUp()
+        {
+            if (!Input.GetKeyDown(config.pickUpItemKey))
+            {
+                return;
+            }
+            
+            PickUpItem(_pickUpHintItem);
+        }
+
+        private void HandleDrop()
+        {
+            if (!Input.GetKeyDown(config.dropItemKey))
+            {
+                return;
+            }
+            
+            DropItem();
         }
 
         private bool IsNeededProcessing()
@@ -74,8 +97,7 @@ namespace _Project.Scripts.Features.Inventory
         {
             _isInventoryVisible = false;
             _inventory.Clear();
-            
-            // TODO:Add hide inventory
+            inventoryUI.gameObject.SetActive(false);
         }
 
         private void ShowInventory()
@@ -84,10 +106,17 @@ namespace _Project.Scripts.Features.Inventory
 
             for (var i = 0; i < config.inventoryCapacity; i++)
             {
-                _inventory.TryAdd(i, null);
-            }
+                var inventoryUnit = Instantiate(inventoryUnitPrefab, inventoryUI.transform);
 
-            // TODO:Add show inventory
+                if (!inventoryUnit.TryGetComponent<ItemInventoryUnit>(out var itemInventoryUnit))
+                {
+                    Debug.LogError($"Item {i} has no ItemInventoryUnit attached");
+                }
+                
+                _inventory.TryAdd(i, itemInventoryUnit);
+            }
+            
+            inventoryUI.gameObject.SetActive(true);
         }
 
         private void HandleInventorySlotSelected()
@@ -147,7 +176,7 @@ namespace _Project.Scripts.Features.Inventory
             return true;
         }
 
-        public void ShowInventoryHint(string hint, Sprite icon = null)
+        private void ShowInventoryHint(string hint, Sprite icon = null)
         {
             _isInventoryHintVisible = true;
             
@@ -156,7 +185,7 @@ namespace _Project.Scripts.Features.Inventory
             if (icon is not null) hintArea.icon.sprite = icon;
         }
 
-        public void HideInventoryHint()
+        private void HideInventoryHint()
         {
             _isInventoryHintVisible = false;
             
@@ -169,15 +198,22 @@ namespace _Project.Scripts.Features.Inventory
             {
                 return;
             }
+
+            if (!_inventory.TryGetValue(_selectedSlot, out var prevSelectedSlot) ||
+                !_inventory.TryGetValue(slot, out var nextSelectedSlot))
+            {
+                return;
+            }
             
-            // TODO: Add processing for change slot
+            prevSelectedSlot.Deselect();
+            nextSelectedSlot.Select();
         }
 
-        public void PickUpItem(Item item)
+        private void PickUpItem(Item item)
         {
             var insertKey = -1;
             
-            if (_inventory[_selectedSlot] == null)
+            if (_inventory[_selectedSlot].Item is null)
             {
                 insertKey = _selectedSlot;
             }
@@ -197,8 +233,13 @@ namespace _Project.Scripts.Features.Inventory
                 return;
             }
             
+            if (!itemsStorage.TryGetItemStorableUnit(item.id, out var itemStorableUnit))
+            {
+                return;
+            }
+            
             item.PickUp(playerHandTransform);
-            _inventory[insertKey] = item;
+            _inventory[insertKey].SetItem(item, itemStorableUnit);
 
             if (config.isPickUpClipExist)
             {
@@ -206,21 +247,23 @@ namespace _Project.Scripts.Features.Inventory
             }
         }
 
-        public void DropItem()
+        private void DropItem()
         {
-            if (!_inventory.TryGetValue(_selectedSlot, out var item))
+            if (!_inventory.TryGetValue(_selectedSlot, out var itemInventoryUnit))
             {
                 return;
             }
+
+            var item = itemInventoryUnit.Item;
             
-            if (item == null)
+            if (item is null)
             {
                 playerNotifier.NotifyPlayer("Твоя рука пуста.");
                 return;
             }
             
             item.Drop(droppedItemParentTransform);
-            _inventory[_selectedSlot] = null;
+            _inventory[_selectedSlot].Clear();
 
             if (!itemsStorage.TryGetItemStorableUnit(item.id, out var itemStorableUnit))
             {
@@ -235,11 +278,11 @@ namespace _Project.Scripts.Features.Inventory
             }
         }
 
-        private List<KeyValuePair<int, Item>> GetSortedInventory()
+        private List<KeyValuePair<int, ItemInventoryUnit>> GetSortedInventory()
         {
-            var inventory = _inventory.ToList();
-            inventory.Sort((x, y) => x.Key.CompareTo(y.Key));
-            return inventory;
+            var inventoryCopy = _inventory.ToList();
+            inventoryCopy.Sort((x, y) => x.Key.CompareTo(y.Key));
+            return inventoryCopy;
         }
     }
 }
