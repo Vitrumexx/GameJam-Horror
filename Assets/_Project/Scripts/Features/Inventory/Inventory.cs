@@ -181,7 +181,7 @@ namespace _Project.Scripts.Features.Inventory
                 
             if (itemStorableUnit.itemWeight == ItemStorableUnit.ItemWeight.Heavy)
             {
-                _enemyNotifier.NotifyEnemy(); // TODO : rework it
+                _enemyNotifier.NotifyEnemyAboutDroppedItem(item.gameObject.transform.position);
             }
         }
 

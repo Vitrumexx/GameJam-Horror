@@ -5,7 +5,7 @@ namespace _Project.Scripts.Features.Enemy
 {
     public class EnemyNotifier : MonoBehaviour
     {
-        public void NotifyEnemy()
+        public void NotifyEnemyAboutDroppedItem(Vector3 pickUpPosition)
         {
             throw new NotImplementedException();
         }
