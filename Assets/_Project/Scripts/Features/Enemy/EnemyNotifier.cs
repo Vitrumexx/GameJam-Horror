@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace _Project.Scripts.Features.Enemy
@@ -6,7 +7,7 @@ namespace _Project.Scripts.Features.Enemy
     {
         public void NotifyEnemy()
         {
-            
+            throw new NotImplementedException();
         }
     }
 }
