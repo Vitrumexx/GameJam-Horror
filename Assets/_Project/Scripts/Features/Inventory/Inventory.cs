@@ -4,6 +4,7 @@ using _Project.Scripts.Features.Enemy;
 using _Project.Scripts.Features.Items;
 using _Project.Scripts.Features.Player;
 using _Project.Scripts.Features.Sounds;
+using _Project.Scripts.Features.UI;
 using UnityEngine;
 
 namespace _Project.Scripts.Features.Inventory
@@ -24,11 +25,17 @@ namespace _Project.Scripts.Features.Inventory
         public AudioSource inventoryAudioSource;
         public InventoryConfig config;
         
+        [Header("UI")]
+        public CanvasGroup inventory;
+        public UIInfoArea hintArea;
+        
         private Dictionary<int, Item> _inventory;
         private int _selectedSlot = 0;
+        private Item _pickUpHintItem;
 
         private EnemyNotifier _enemyNotifier;
         private bool _isInventoryVisible = true; 
+        private bool _isInventoryHintVisible = false;
 
         private void Start()
         {
@@ -97,20 +104,63 @@ namespace _Project.Scripts.Features.Inventory
 
         private void HandleItemsToPickUp() // TODO: make it not updated every frame
         {
-            if (!itemsRegistrator.TryGetNearest(playerHandTransform.position, out var nearestItem, out var distance))
+            if (!IsHintNeeded(out var nearestItem, out var nearestStorableUnit))
             {
+                if (_isInventoryHintVisible)
+                {
+                    HideInventoryHint();
+                }
+
                 return;
             }
 
-            if (distance > config.pickUpDistance) return;
-
-            if (!itemsStorage.TryGetItemStorableUnit(nearestItem.id, out var itemStorableUnit))
+            if (_pickUpHintItem == nearestItem && _isInventoryVisible)
             {
                 return;
             }
+            _pickUpHintItem = nearestItem;
 
-            playerNotifier.NotifyPlayer($"Чтобы поднять предмет, нажмите {config.pickUpItemKey}.",
-                itemStorableUnit.icon);
+            ShowInventoryHint($"Чтобы поднять предмет, нажмите {config.pickUpItemKey}.", nearestStorableUnit.icon);
+        }
+
+        private bool IsHintNeeded(out Item nearestItem, out ItemStorableUnit nearestStorableUnit)
+        {
+            nearestStorableUnit = null;
+            
+            if (!itemsRegistrator.TryGetNearest(playerHandTransform.position, out nearestItem, out var distance))
+            {
+                return false;
+            }
+
+            if (distance > config.pickUpDistance) return false;
+
+            if (nearestItem == _pickUpHintItem)
+            {
+                return false;
+            }
+            
+            if (!itemsStorage.TryGetItemStorableUnit(nearestItem.id, out nearestStorableUnit))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public void ShowInventoryHint(string hint, Sprite icon = null)
+        {
+            _isInventoryHintVisible = true;
+            
+            hintArea.infoArea.gameObject.SetActive(false);
+            hintArea.text.text = hint;
+            if (icon is not null) hintArea.icon.sprite = icon;
+        }
+
+        public void HideInventoryHint()
+        {
+            _isInventoryHintVisible = false;
+            
+            hintArea.infoArea.gameObject.SetActive(false);
         }
 
         private void OnChangeSelectedSlot(int slot)
