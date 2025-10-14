@@ -150,7 +150,7 @@ namespace _Project.Scripts.Features.Inventory
         {
             nearestStorableUnit = null;
             
-            if (!itemsRegistrator.TryGetNearestDroppedItem(playerHandTransform.position, out nearestItem, config.pickUpDistance))
+            if (!itemsRegistrator.TryGetNearestDroppedItemToPickUp(playerHandTransform.position, out nearestItem, config.pickUpDistance))
             {
                 return false;
             }

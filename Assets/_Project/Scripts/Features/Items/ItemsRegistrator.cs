@@ -6,11 +6,11 @@ namespace _Project.Scripts.Features.Items
 {
     public class ItemsRegistrator : UnitRegistrator<Item>
     {
-        public bool TryGetNearestDroppedItem(Vector3 position, out Item nearest, float distance)
+        public bool TryGetNearestDroppedItemToPickUp(Vector3 position, out Item nearest, float distance)
         {
             var items = GetUnitsInDistanceToPosition(position, distance);
             
-            items.RemoveAll(x => !x.IsDropped);
+            items.RemoveAll(x => !x.IsDropped || !x.isPickupable);
             
             items.Sort((x, y) => 
                 Vector3.Distance(position, x.gameObject.transform.position)

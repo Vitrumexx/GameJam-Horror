@@ -8,6 +8,7 @@ namespace _Project.Scripts.Features.Items
     {
         public string id = string.Empty;
         public bool IsDropped { get; set; } = true;
+        public bool isPickupable = true;
         
         private Collider _collider;
         private Rigidbody _rigidbody;
