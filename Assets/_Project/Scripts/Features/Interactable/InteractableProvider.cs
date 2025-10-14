@@ -56,7 +56,7 @@ namespace _Project.Scripts.Features.Interactable
             {
                 if (_isOverlayVisible) return;
 
-                var message = $"Press \"{interactKey}\" to interact.";
+                var message = $"Press \"{interactKey}\" to interact";
                 _isOverlayVisible = true;
                 playerOverlay.AddData(OverlayTag, message);
             }
@@ -72,13 +72,13 @@ namespace _Project.Scripts.Features.Interactable
                 return;
             }
 
-            if (!_closestInteractable.IsConditionFulfilled(out var message))
+            if (!_closestInteractable.IsConditionFulfilled(out var message, out var sprite))
             {
-                playerNotifier.NotifyPlayer($"Interact aborting: {message}!");
+                playerNotifier.NotifyPlayer($"Interact aborting: {message}.", sprite);
                 return;
             }
             
-            _closestInteractable.Interact();
+            _closestInteractable.ProcessInteract();
         }
     }
 }
