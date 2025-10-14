@@ -38,7 +38,6 @@ namespace _Project.Scripts.Features.Inventory
         private bool _isInventoryVisible = false; 
         
         private static readonly string PickUpHintOverlayTag = "PickUpHintOverlay";
-        private bool _isPickUpHintVisible = true;
         private static readonly string DropHintOverlayTag = "DropHintOverlay";
 
         private void Start()
@@ -133,19 +132,20 @@ namespace _Project.Scripts.Features.Inventory
         {
             if (!IsHintNeeded(out var nearestItem, out var nearestStorableUnit))
             {
-                if (_isPickUpHintVisible)
-                {
-                    _pickUpHintItem = null;
-                    HidePickUpHint();
-                }
+                if (_pickUpHintItem is null) return;
+                
+                _pickUpHintItem = null;
+                playerOverlay.RemoveData(PickUpHintOverlayTag);
 
                 return;
             }
 
             if (_pickUpHintItem == nearestItem) return;
+            
             _pickUpHintItem = nearestItem;
 
-            ShowPickUpHint($"Press \"{config.pickUpItemKey}\" to raise", nearestStorableUnit.icon);
+            var message = $"Press \"{config.pickUpItemKey}\" to raise";
+            playerOverlay.UpdateData(PickUpHintOverlayTag, message, nearestStorableUnit.icon);
         }
 
         private bool IsHintNeeded(out Item nearestItem, out ItemStorableUnit nearestStorableUnit)
@@ -163,20 +163,6 @@ namespace _Project.Scripts.Features.Inventory
             }
             
             return true;
-        }
-
-        private void ShowPickUpHint(string hint, Sprite icon = null)
-        {
-            _isPickUpHintVisible = true;
-            
-            playerOverlay.AddData(PickUpHintOverlayTag, hint, icon);
-        }
-
-        private void HidePickUpHint()
-        {
-            _isPickUpHintVisible = false;
-            
-            playerOverlay.RemoveData(PickUpHintOverlayTag);
         }
 
         private void OnChangeSelectedSlot(int slot)
