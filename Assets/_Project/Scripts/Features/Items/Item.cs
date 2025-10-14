@@ -1,4 +1,3 @@
-using _Project.Scripts.Features.UI;
 using UnityEngine;
 
 namespace _Project.Scripts.Features.Items
@@ -9,7 +8,6 @@ namespace _Project.Scripts.Features.Items
     {
         public string id = string.Empty;
         public bool IsDropped { get; set; } = true;
-        public UIInfoArea infoArea;
         
         private Collider _collider;
         private Rigidbody _rigidbody;
