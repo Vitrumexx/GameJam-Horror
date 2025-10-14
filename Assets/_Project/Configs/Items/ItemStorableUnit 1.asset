@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: ItemStorableUnit 1
   m_EditorClassIdentifier: 
   id: pickaxe_2
+  unitName: Pickaxe 2
   icon: {fileID: 21300000, guid: d38a76acd0d4bc54cb436ce23eee1129, type: 3}
   itemWeight: 1
   soundId: 
