@@ -31,7 +31,7 @@ namespace _Project.Scripts.Features.Inventory
         public UIInfoArea hintArea;
         
         private Dictionary<int, ItemInventoryUnit> _inventory = new();
-        private int _selectedSlot = 0;
+        private int _selectedSlot = 1;
         private Item _pickUpHintItem;
 
         private EnemyNotifier _enemyNotifier;
