@@ -143,7 +143,7 @@ namespace _Project.Scripts.Features.Inventory
             if (_pickUpHintItem == nearestItem) return;
             _pickUpHintItem = nearestItem;
 
-            ShowInventoryHint($"Чтобы поднять предмет, нажмите {config.pickUpItemKey}.", nearestStorableUnit.icon);
+            ShowInventoryHint($"Press \"{config.pickUpItemKey}\" to raise", nearestStorableUnit.icon);
         }
 
         private bool IsHintNeeded(out Item nearestItem, out ItemStorableUnit nearestStorableUnit)
@@ -228,7 +228,7 @@ namespace _Project.Scripts.Features.Inventory
 
             if (insertKey < 0)
             {
-                playerNotifier.NotifyPlayer("В инвентаре недостаточно мест.");
+                playerNotifier.NotifyPlayer("Inventory is full.");
                 return;
             }
             
@@ -262,7 +262,7 @@ namespace _Project.Scripts.Features.Inventory
 
             if (item is null)
             {
-                playerNotifier.NotifyPlayer("Твоя рука пуста!");
+                playerNotifier.NotifyPlayer("Nothing to drop.");
                 return;
             }
             
