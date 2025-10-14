@@ -5,8 +5,6 @@ namespace _Project.Scripts.Features.Interactable
     [RequireComponent(typeof(Rigidbody), typeof(Collider))]
     public class RigidbodyChangerInteractable : Interactable
     {
-        [Header("Conditions")]
-        
         [Header("Changes on interact")]
         public bool isKinematic = false;
 
