@@ -31,6 +31,7 @@ namespace _Project.Scripts.Features.Items
 
             transform.SetParent(droppedStorage);
             _rigidbody.isKinematic = false;
+            _collider.isTrigger = false;
         }
 
         public void PickUp(Transform pickUpStorage)
@@ -41,6 +42,7 @@ namespace _Project.Scripts.Features.Items
             transform.position = pickUpStorage.position;
             transform.rotation = pickUpStorage.rotation;
             _rigidbody.isKinematic = true;
+            _collider.isTrigger = true;
         }
 
         private void OnDestroy()
