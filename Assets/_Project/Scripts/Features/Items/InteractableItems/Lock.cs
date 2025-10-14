@@ -1,12 +1,12 @@
 namespace _Project.Scripts.Features.Items.InteractableItems
 {
-    public class Key : InteractableItem
+    public class Lock : InteractableItem
     {
         public string key;
         
         public override void Interact()
         {
-            // TODO: find in given radius doors to open
+            throw new System.NotImplementedException();
         }
     }
 }
