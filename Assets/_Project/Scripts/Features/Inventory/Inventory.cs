@@ -264,7 +264,7 @@ namespace _Project.Scripts.Features.Inventory
             }
         }
 
-        private void DropItem(int slot)
+        public void DropItem(int slot)
         {
             if (!_inventory.TryGetValue(slot, out var itemInventoryUnit))
             {
