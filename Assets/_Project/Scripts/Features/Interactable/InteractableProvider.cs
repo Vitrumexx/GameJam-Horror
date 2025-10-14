@@ -15,6 +15,7 @@ namespace _Project.Scripts.Features.Interactable
         
         [Header("Services")]
         public PlayerOverlay playerOverlay;
+        public PlayerNotifier playerNotifier;
         
         [Header("Config")]
         public KeyCode interactKey = KeyCode.E;
@@ -22,10 +23,12 @@ namespace _Project.Scripts.Features.Interactable
         
         private Interactable _closestInteractable;
         private bool _isOverlayVisible = false;
+        private static readonly string OverlayTag = "InteractableProvider";
         
         private void Update()
         {
             SearchForClosestInteractable();
+            SetOverlay();
             HandleInteract();
         }
 
@@ -39,25 +42,43 @@ namespace _Project.Scripts.Features.Interactable
                 .OrderBy(x => x.dist)
                 .Select(x => x.obj)
                 .FirstOrDefault();
+        }
 
+        private void SetOverlay()
+        {
             if (_closestInteractable is null)
             {
                 if (!_isOverlayVisible) return;
                 
                 _isOverlayVisible = false;
-                playerOverlay.HideInteractable();
+                playerOverlay.RemoveData(OverlayTag);
             }
             else
             {
                 if (_isOverlayVisible) return;
-                
+
+                var message = $"Press \"{interactKey}\" to interact.";
                 _isOverlayVisible = true;
-                playerOverlay.ShowInteractable(interactKey, warningSprite);
+                playerOverlay.AddData(OverlayTag, message, warningSprite);
             }
         }
 
         private void HandleInteract()
         {
+            if (!Input.GetKeyDown(interactKey)) return;
+
+            if (_closestInteractable is null)
+            {
+                playerNotifier.NotifyPlayer("There's nothing nearby that you can interact with.");
+                return;
+            }
+
+            if (!_closestInteractable.IsConditionFulfilled(out var message))
+            {
+                playerNotifier.NotifyPlayer($"Interact aborting: {message}!");
+                return;
+            }
+            
             _closestInteractable.Interact();
         }
     }
