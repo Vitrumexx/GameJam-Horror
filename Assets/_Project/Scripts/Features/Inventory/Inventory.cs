@@ -215,7 +215,7 @@ namespace _Project.Scripts.Features.Inventory
         {
             if (item is null)
             {
-                playerNotifier.NotifyPlayer("Nothing to pick up.");
+                playerNotifier.NotifyPlayer("Nothing to raise.");
                 return;
             }
             
