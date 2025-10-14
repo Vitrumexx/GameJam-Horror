@@ -33,5 +33,11 @@ namespace _Project.Scripts.Features.Player
 
             Destroy(uiInfoArea.gameObject);
         }
+
+        public void UpdateData(string overlayTag, string text, Sprite sprite = null)
+        {
+            RemoveData(overlayTag);
+            AddData(overlayTag, text, sprite);
+        }
     }
 }
