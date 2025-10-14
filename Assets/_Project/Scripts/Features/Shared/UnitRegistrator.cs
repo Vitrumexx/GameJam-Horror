@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace _Project.Scripts.Features.Shared
@@ -21,10 +22,15 @@ namespace _Project.Scripts.Features.Shared
             Debug.LogError($"Not found {unit.gameObject.name}!");
         }
 
+        public List<T> GetUnitsInDistanceToPosition(Vector3 position, float distance)
+        {
+            return Units.Where(unit => Vector3.Distance(position, unit.transform.position) <= distance).ToList();
+        }
+
         public bool TryGetNearest(Vector3 position, out T nearest, out float distance)
         {
             nearest = null;
-            distance = -1f;
+            distance = Mathf.Infinity;
             
             foreach (var unit in Units)
             {
@@ -35,7 +41,7 @@ namespace _Project.Scripts.Features.Shared
                 distance = currentDistance;
             }
             
-            return nearest != null;
+            return nearest is not null;
         }
     }
 }

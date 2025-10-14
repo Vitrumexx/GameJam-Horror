@@ -26,17 +26,17 @@ namespace _Project.Scripts.Features.Inventory
         public InventoryConfig config;
         
         [Header("UI")]
-        public CanvasGroup inventoryUI;
+        public CanvasGroup inventoryUIStorage;
         public GameObject inventoryUnitPrefab;
         public UIInfoArea hintArea;
         
-        private Dictionary<int, ItemInventoryUnit> _inventory;
+        private Dictionary<int, ItemInventoryUnit> _inventory = new();
         private int _selectedSlot = 0;
         private Item _pickUpHintItem;
 
         private EnemyNotifier _enemyNotifier;
-        private bool _isInventoryVisible = true; 
-        private bool _isInventoryHintVisible = false;
+        private bool _isInventoryVisible = false; 
+        private bool _isInventoryHintVisible = true;
 
         private void Start()
         {
@@ -55,20 +55,15 @@ namespace _Project.Scripts.Features.Inventory
 
         private void HandlePickUp()
         {
-            if (!Input.GetKeyDown(config.pickUpItemKey))
-            {
-                return;
-            }
+            if (!Input.GetKeyDown(config.pickUpItemKey)) return;
+            if (_pickUpHintItem is null) return;
             
             PickUpItem(_pickUpHintItem);
         }
 
         private void HandleDrop()
         {
-            if (!Input.GetKeyDown(config.dropItemKey))
-            {
-                return;
-            }
+            if (!Input.GetKeyDown(config.dropItemKey)) return;
             
             DropItem();
         }
@@ -97,7 +92,7 @@ namespace _Project.Scripts.Features.Inventory
         {
             _isInventoryVisible = false;
             _inventory.Clear();
-            inventoryUI.gameObject.SetActive(false);
+            inventoryUIStorage.gameObject.SetActive(false);
         }
 
         private void ShowInventory()
@@ -106,7 +101,7 @@ namespace _Project.Scripts.Features.Inventory
 
             for (var i = 0; i < config.inventoryCapacity; i++)
             {
-                var inventoryUnit = Instantiate(inventoryUnitPrefab, inventoryUI.transform);
+                var inventoryUnit = Instantiate(inventoryUnitPrefab, inventoryUIStorage.transform);
 
                 if (!inventoryUnit.TryGetComponent<ItemInventoryUnit>(out var itemInventoryUnit))
                 {
@@ -116,7 +111,7 @@ namespace _Project.Scripts.Features.Inventory
                 _inventory.TryAdd(i, itemInventoryUnit);
             }
             
-            inventoryUI.gameObject.SetActive(true);
+            inventoryUIStorage.gameObject.SetActive(true);
         }
 
         private void HandleInventorySlotSelected()
@@ -131,22 +126,20 @@ namespace _Project.Scripts.Features.Inventory
             }
         }
 
-        private void HandleItemsToPickUp() // TODO: make it not updated every frame
+        private void HandleItemsToPickUp()
         {
             if (!IsHintNeeded(out var nearestItem, out var nearestStorableUnit))
             {
                 if (_isInventoryHintVisible)
                 {
+                    _pickUpHintItem = null;
                     HideInventoryHint();
                 }
 
                 return;
             }
 
-            if (_pickUpHintItem == nearestItem && _isInventoryVisible)
-            {
-                return;
-            }
+            if (_pickUpHintItem == nearestItem) return;
             _pickUpHintItem = nearestItem;
 
             ShowInventoryHint($"Чтобы поднять предмет, нажмите {config.pickUpItemKey}.", nearestStorableUnit.icon);
@@ -156,14 +149,7 @@ namespace _Project.Scripts.Features.Inventory
         {
             nearestStorableUnit = null;
             
-            if (!itemsRegistrator.TryGetNearest(playerHandTransform.position, out nearestItem, out var distance))
-            {
-                return false;
-            }
-
-            if (distance > config.pickUpDistance) return false;
-
-            if (nearestItem == _pickUpHintItem)
+            if (!itemsRegistrator.TryGetNearestDroppedItem(playerHandTransform.position, out nearestItem, config.pickUpDistance))
             {
                 return false;
             }
@@ -172,7 +158,7 @@ namespace _Project.Scripts.Features.Inventory
             {
                 return false;
             }
-
+            
             return true;
         }
 
@@ -180,7 +166,7 @@ namespace _Project.Scripts.Features.Inventory
         {
             _isInventoryHintVisible = true;
             
-            hintArea.infoArea.gameObject.SetActive(false);
+            hintArea.gameObject.SetActive(true);
             hintArea.text.text = hint;
             if (icon is not null) hintArea.icon.sprite = icon;
         }
@@ -189,7 +175,7 @@ namespace _Project.Scripts.Features.Inventory
         {
             _isInventoryHintVisible = false;
             
-            hintArea.infoArea.gameObject.SetActive(false);
+            hintArea.gameObject.SetActive(false);
         }
 
         private void OnChangeSelectedSlot(int slot)
@@ -211,6 +197,8 @@ namespace _Project.Scripts.Features.Inventory
 
         private void PickUpItem(Item item)
         {
+            if (item is null) return;
+            
             var insertKey = -1;
             
             if (_inventory[_selectedSlot].Item is null)
@@ -249,6 +237,8 @@ namespace _Project.Scripts.Features.Inventory
 
         private void DropItem()
         {
+            if (_inventory[_selectedSlot].Item is null) return;
+            
             if (!_inventory.TryGetValue(_selectedSlot, out var itemInventoryUnit))
             {
                 return;
@@ -274,7 +264,7 @@ namespace _Project.Scripts.Features.Inventory
                 
             if (itemStorableUnit.itemWeight == ItemStorableUnit.ItemWeight.Heavy)
             {
-                _enemyNotifier.NotifyEnemyAboutDroppedItem(item.gameObject.transform.position);
+                _enemyNotifier?.NotifyEnemyAboutDroppedItem(item.gameObject.transform.position);
             }
         }
 

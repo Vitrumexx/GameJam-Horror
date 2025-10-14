@@ -9,6 +9,11 @@ namespace _Project.Scripts.Features.UI
         public Image deselectedFrame;
         public Image selectedFrame;
 
+        private void Start()
+        {
+            Clear();
+        }
+
         public void Select()
         {
             selectedFrame.gameObject.SetActive(true);

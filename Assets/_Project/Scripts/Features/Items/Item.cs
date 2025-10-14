@@ -29,8 +29,7 @@ namespace _Project.Scripts.Features.Items
             IsDropped = true;
 
             transform.SetParent(droppedStorage);
-            _collider.enabled = true;
-            _rigidbody.useGravity = true;
+            _rigidbody.isKinematic = false;
         }
 
         public void PickUp(Transform pickUpStorage)
@@ -38,8 +37,9 @@ namespace _Project.Scripts.Features.Items
             IsDropped = false;
 
             transform.SetParent(pickUpStorage);
-            _collider.enabled = false;
-            _rigidbody.useGravity = false;
+            transform.position = pickUpStorage.position;
+            transform.rotation = pickUpStorage.rotation;
+            _rigidbody.isKinematic = true;
         }
     }
 }

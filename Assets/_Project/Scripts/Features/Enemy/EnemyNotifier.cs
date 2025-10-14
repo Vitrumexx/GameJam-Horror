@@ -7,7 +7,7 @@ namespace _Project.Scripts.Features.Enemy
     {
         public void NotifyEnemyAboutDroppedItem(Vector3 pickUpPosition)
         {
-            throw new NotImplementedException();
+            Debug.Log($"Enemy notified at {pickUpPosition}");
         }
     }
 }
