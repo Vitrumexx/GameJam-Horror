@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPickUpClipExist: 0
   pickUpClipId: pickup
-  inventoryCapacity: 2
-  pickUpItemKey: 102
+  inventoryCapacity: 3
+  pickUpItemKey: 101
   dropItemKey: 113
   pickUpDistance: 5
