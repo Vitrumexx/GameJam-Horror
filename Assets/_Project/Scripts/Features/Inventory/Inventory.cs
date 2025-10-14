@@ -112,11 +112,12 @@ namespace _Project.Scripts.Features.Inventory
             }
             
             inventoryUIStorage.gameObject.SetActive(true);
+            OnChangeSelectedSlot(1);
         }
 
         private void HandleInventorySlotSelected()
         {
-            for (var i = 0; i < 10; i++)
+            for (var i = 0; i < 9; i++)
             {
                 var key = KeyCode.Alpha0 + i;
                 if (Input.GetKeyDown(key))
@@ -180,9 +181,16 @@ namespace _Project.Scripts.Features.Inventory
 
         private void OnChangeSelectedSlot(int slot)
         {
-            if (slot <= 0 || slot > config.inventoryCapacity)
+            if (slot < 0 || slot > config.inventoryCapacity)
             {
                 return;
+            }
+
+            slot -= 1;
+
+            if (slot < 0)
+            {
+                slot = 9;
             }
 
             if (!_inventory.TryGetValue(_selectedSlot, out var prevSelectedSlot) ||
@@ -192,7 +200,12 @@ namespace _Project.Scripts.Features.Inventory
             }
             
             prevSelectedSlot.Deselect();
+            prevSelectedSlot.Item?.gameObject.SetActive(false);
+            
             nextSelectedSlot.Select();
+            nextSelectedSlot.Item?.gameObject.SetActive(true);
+            
+            _selectedSlot = slot;
         }
 
         private void PickUpItem(Item item)
@@ -209,7 +222,7 @@ namespace _Project.Scripts.Features.Inventory
             {
                 var sortedInventory = GetSortedInventory();
 
-                foreach (var keyValuePair in sortedInventory.Where(keyValuePair => keyValuePair.Value == null))
+                foreach (var keyValuePair in sortedInventory.Where(keyValuePair => keyValuePair.Value.Item is null))
                 {
                     insertKey = keyValuePair.Key;
                 }
@@ -229,6 +242,11 @@ namespace _Project.Scripts.Features.Inventory
             item.PickUp(playerHandTransform);
             _inventory[insertKey].SetItem(item, itemStorableUnit);
 
+            if (_selectedSlot != insertKey)
+            {
+                _inventory[insertKey].Item?.gameObject.SetActive(false);
+            }
+
             if (config.isPickUpClipExist)
             {
                 soundsPlayer.PlayClip(inventoryAudioSource, config.pickUpClipId);
@@ -237,18 +255,16 @@ namespace _Project.Scripts.Features.Inventory
 
         private void DropItem()
         {
-            if (_inventory[_selectedSlot].Item is null) return;
-            
             if (!_inventory.TryGetValue(_selectedSlot, out var itemInventoryUnit))
             {
                 return;
             }
 
             var item = itemInventoryUnit.Item;
-            
+
             if (item is null)
             {
-                playerNotifier.NotifyPlayer("Твоя рука пуста.");
+                playerNotifier.NotifyPlayer("Твоя рука пуста!");
                 return;
             }
             
@@ -271,7 +287,7 @@ namespace _Project.Scripts.Features.Inventory
         private List<KeyValuePair<int, ItemInventoryUnit>> GetSortedInventory()
         {
             var inventoryCopy = _inventory.ToList();
-            inventoryCopy.Sort((x, y) => x.Key.CompareTo(y.Key));
+            inventoryCopy.Sort((x, y) => y.Key.CompareTo(x.Key));
             return inventoryCopy;
         }
     }
