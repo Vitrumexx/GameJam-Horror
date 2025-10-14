@@ -19,7 +19,6 @@ namespace _Project.Scripts.Features.Interactable
         
         [Header("Config")]
         public KeyCode interactKey = KeyCode.E;
-        [InfoBox("Можно не указывать")] public Sprite warningSprite;
         
         private Interactable _closestInteractable;
         private bool _isOverlayVisible = false;
@@ -59,7 +58,7 @@ namespace _Project.Scripts.Features.Interactable
 
                 var message = $"Press \"{interactKey}\" to interact.";
                 _isOverlayVisible = true;
-                playerOverlay.AddData(OverlayTag, message, warningSprite);
+                playerOverlay.AddData(OverlayTag, message);
             }
         }
 
