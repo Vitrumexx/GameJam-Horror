@@ -9,25 +9,28 @@ namespace _Project.Scripts.Features.Player
         public Transform overlay;
         public GameObject uiInfoAreaPrefab;
 
-        private Dictionary<string, UIInfoArea> _data;
+        private readonly Dictionary<string, UIInfoArea> _data = new();
         
-        private static readonly string InteractableKey = "interactable";
-        
-        public void ShowInteractable(KeyCode keyToInteract, Sprite sprite = null)
+        public void AddData(string overlayTag, string text, Sprite sprite = null)
         {
-            if (_data.ContainsKey(InteractableKey)) return;
+            if (_data.ContainsKey(overlayTag)) return;
             
             var obj = Instantiate(uiInfoAreaPrefab, overlay);
             var infoArea = obj.GetComponent<UIInfoArea>();
 
-            infoArea.text.text = $"Click \"{keyToInteract}\" to interact.";
+            infoArea.text.text = text;
             infoArea.SetIcon(sprite);
+
+            if (!_data.TryAdd(overlayTag, infoArea))
+            {
+                Destroy(obj);
+            }
         }
 
-        public void HideInteractable()
+        public void RemoveData(string overlayTag)
         {
-            if (!_data.TryGetValue(InteractableKey, out var uiInfoArea)) return;
-            
+            if (!_data.Remove(overlayTag, out var uiInfoArea)) return;
+
             Destroy(uiInfoArea.gameObject);
         }
     }
