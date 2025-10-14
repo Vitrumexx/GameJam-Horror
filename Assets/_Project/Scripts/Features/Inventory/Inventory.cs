@@ -108,7 +108,7 @@ namespace _Project.Scripts.Features.Inventory
                     Debug.LogError($"Item {i} has no ItemInventoryUnit attached");
                 }
                 
-                _inventory.TryAdd(i, itemInventoryUnit);
+                _inventory.TryAdd(i + 1, itemInventoryUnit);
             }
             
             inventoryUIStorage.gameObject.SetActive(true);
@@ -186,11 +186,9 @@ namespace _Project.Scripts.Features.Inventory
                 return;
             }
 
-            slot -= 1;
-
-            if (slot < 0)
+            if (slot == 0)
             {
-                slot = 9;
+                slot = 10;
             }
 
             if (!_inventory.TryGetValue(_selectedSlot, out var prevSelectedSlot) ||
