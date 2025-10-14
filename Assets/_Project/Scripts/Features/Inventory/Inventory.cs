@@ -16,6 +16,7 @@ namespace _Project.Scripts.Features.Inventory
         public PlayerNotifier playerNotifier;
         public ItemsStorage itemsStorage;
         public ItemsRegistrator itemsRegistrator;
+        public PlayerOverlay playerOverlay;
         
         [Header("Transform")]
         public Transform playerHandTransform;
@@ -28,7 +29,6 @@ namespace _Project.Scripts.Features.Inventory
         [Header("UI")]
         public CanvasGroup inventoryUIStorage;
         public GameObject inventoryUnitPrefab;
-        public UIInfoArea hintArea;
         
         private Dictionary<int, ItemInventoryUnit> _inventory = new();
         private int _selectedSlot = 1;
@@ -36,7 +36,10 @@ namespace _Project.Scripts.Features.Inventory
 
         private EnemyNotifier _enemyNotifier;
         private bool _isInventoryVisible = false; 
-        private bool _isInventoryHintVisible = true;
+        
+        private static readonly string PickUpHintOverlayTag = "PickUpHintOverlay";
+        private bool _isPickUpHintVisible = true;
+        private static readonly string DropHintOverlayTag = "DropHintOverlay";
 
         private void Start()
         {
@@ -56,7 +59,6 @@ namespace _Project.Scripts.Features.Inventory
         private void HandlePickUp()
         {
             if (!Input.GetKeyDown(config.pickUpItemKey)) return;
-            if (_pickUpHintItem is null) return;
             
             PickUpItem(_pickUpHintItem);
         }
@@ -65,7 +67,7 @@ namespace _Project.Scripts.Features.Inventory
         {
             if (!Input.GetKeyDown(config.dropItemKey)) return;
             
-            DropItem();
+            DropItem(_selectedSlot);
         }
 
         private bool IsNeededProcessing()
@@ -131,10 +133,10 @@ namespace _Project.Scripts.Features.Inventory
         {
             if (!IsHintNeeded(out var nearestItem, out var nearestStorableUnit))
             {
-                if (_isInventoryHintVisible)
+                if (_isPickUpHintVisible)
                 {
                     _pickUpHintItem = null;
-                    HideInventoryHint();
+                    HidePickUpHint();
                 }
 
                 return;
@@ -143,7 +145,7 @@ namespace _Project.Scripts.Features.Inventory
             if (_pickUpHintItem == nearestItem) return;
             _pickUpHintItem = nearestItem;
 
-            ShowInventoryHint($"Press \"{config.pickUpItemKey}\" to raise", nearestStorableUnit.icon);
+            ShowPickUpHint($"Press \"{config.pickUpItemKey}\" to raise", nearestStorableUnit.icon);
         }
 
         private bool IsHintNeeded(out Item nearestItem, out ItemStorableUnit nearestStorableUnit)
@@ -163,20 +165,18 @@ namespace _Project.Scripts.Features.Inventory
             return true;
         }
 
-        private void ShowInventoryHint(string hint, Sprite icon = null)
+        private void ShowPickUpHint(string hint, Sprite icon = null)
         {
-            _isInventoryHintVisible = true;
+            _isPickUpHintVisible = true;
             
-            hintArea.gameObject.SetActive(true);
-            hintArea.text.text = hint;
-            if (icon is not null) hintArea.icon.sprite = icon;
+            playerOverlay.AddData(PickUpHintOverlayTag, hint, icon);
         }
 
-        private void HideInventoryHint()
+        private void HidePickUpHint()
         {
-            _isInventoryHintVisible = false;
+            _isPickUpHintVisible = false;
             
-            hintArea.gameObject.SetActive(false);
+            playerOverlay.RemoveData(PickUpHintOverlayTag);
         }
 
         private void OnChangeSelectedSlot(int slot)
@@ -201,14 +201,37 @@ namespace _Project.Scripts.Features.Inventory
             prevSelectedSlot.Item?.gameObject.SetActive(false);
             
             nextSelectedSlot.Select();
-            nextSelectedSlot.Item?.gameObject.SetActive(true);
+            if (nextSelectedSlot.Item is not null)
+            {
+                nextSelectedSlot.Item.gameObject.SetActive(true);
+                ShowDropHint();
+            }
+            else
+            {
+                HideDropHint();
+            }
             
             _selectedSlot = slot;
         }
 
+        private void ShowDropHint()
+        {
+            var message = $"Press \"{config.dropItemKey}\" to drop";
+            playerOverlay.AddData(DropHintOverlayTag, message);
+        }
+
+        private void HideDropHint()
+        {
+            playerOverlay.RemoveData(DropHintOverlayTag);
+        }
+
         private void PickUpItem(Item item)
         {
-            if (item is null) return;
+            if (item is null)
+            {
+                playerNotifier.NotifyPlayer("Nothing to pick up.");
+                return;
+            }
             
             var insertKey = -1;
             
@@ -244,6 +267,10 @@ namespace _Project.Scripts.Features.Inventory
             {
                 _inventory[insertKey].Item?.gameObject.SetActive(false);
             }
+            else
+            {
+                ShowDropHint();
+            }
 
             if (config.isPickUpClipExist)
             {
@@ -251,9 +278,9 @@ namespace _Project.Scripts.Features.Inventory
             }
         }
 
-        private void DropItem()
+        private void DropItem(int slot)
         {
-            if (!_inventory.TryGetValue(_selectedSlot, out var itemInventoryUnit))
+            if (!_inventory.TryGetValue(slot, out var itemInventoryUnit))
             {
                 return;
             }
@@ -268,6 +295,7 @@ namespace _Project.Scripts.Features.Inventory
             
             item.Drop(droppedItemParentTransform);
             _inventory[_selectedSlot].Clear();
+            HideDropHint();
 
             if (!itemsStorage.TryGetItemStorableUnit(item.id, out var itemStorableUnit))
             {
@@ -287,6 +315,32 @@ namespace _Project.Scripts.Features.Inventory
             var inventoryCopy = _inventory.ToList();
             inventoryCopy.Sort((x, y) => y.Key.CompareTo(x.Key));
             return inventoryCopy;
+        }
+
+        public bool TryGetItemWithIdAndSlot(string itemId, out Item item, out int slot, bool isSelected = false)
+        {
+            item = null;
+            slot = -1;
+
+            if (_inventory[_selectedSlot].Item is not null && _inventory[_selectedSlot].Item.id == itemId)
+            {
+                item = _inventory[_selectedSlot].Item;
+                slot = _selectedSlot;
+            }
+            
+            if (item is not null) return true;
+            if (isSelected) return false;
+
+            var sortedInventory = GetSortedInventory();
+
+            foreach (var inventoryPair in sortedInventory
+                         .Where(inventoryPair => inventoryPair.Value.Item is not null && inventoryPair.Value.Item.id == itemId))
+            {
+                item = inventoryPair.Value.Item;
+                slot = inventoryPair.Key;
+            }
+            
+            return item is not null;
         }
     }
 }
