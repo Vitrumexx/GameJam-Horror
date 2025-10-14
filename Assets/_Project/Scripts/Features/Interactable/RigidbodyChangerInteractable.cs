@@ -17,7 +17,7 @@ namespace _Project.Scripts.Features.Interactable
             _rigidbody = GetComponent<Rigidbody>();
         }
         
-        public override void Interact()
+        protected override void Interact()
         {
             _rigidbody.isKinematic = isKinematic;
         }

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using _Project.Scripts.Features.Items;
-using _Project.Scripts.Features.Player;
 using UnityEngine;
 
 namespace _Project.Scripts.Features.Interactable
@@ -14,9 +13,11 @@ namespace _Project.Scripts.Features.Interactable
         [Header("Condition on item in inventory config")]
         public string itemId;
         public bool isItemSelected = false;
+        public bool isDelItemOnUse = true;
         
         private InteractableProvider _interactableProvider;
         private Inventory.Inventory _inventory;
+        private ItemsStorage _itemsStorage;
         private KeyValuePair<int, Item> _selectedItem;
 
         public enum InteractConditions
@@ -25,7 +26,17 @@ namespace _Project.Scripts.Features.Interactable
             OnItemInInventory = 1
         }
         
-        public abstract void Interact();
+        protected abstract void Interact();
+
+        public void ProcessInteract()
+        {
+            Interact();
+
+            if (!isDelItemOnUse) return;
+            
+            _inventory.DropItem(_selectedItem.Key);
+            Destroy(_selectedItem.Value.gameObject);
+        }
 
         protected virtual void Start()
         {
@@ -33,6 +44,7 @@ namespace _Project.Scripts.Features.Interactable
             _interactableProvider?.RegisterItem(this);
             
             _inventory = FindObjectOfType<Inventory.Inventory>();
+            _itemsStorage = FindObjectOfType<ItemsStorage>();
         }
 
         protected virtual void OnDestroy()
@@ -40,9 +52,10 @@ namespace _Project.Scripts.Features.Interactable
             _interactableProvider?.UnregisterItem(this);
         }
 
-        public bool IsConditionFulfilled(out string message)
+        public bool IsConditionFulfilled(out string message, out Sprite sprite)
         {
             message = string.Empty;
+            sprite = null;
             
             switch (interactCondition)
             {
@@ -52,7 +65,7 @@ namespace _Project.Scripts.Features.Interactable
                 }
                 case InteractConditions.OnItemInInventory:
                 {
-                    return CheckOnItemInInventoryCondition(out message);
+                    return CheckOnItemInInventoryCondition(out message, out sprite);
                 }
                 default:
                 {
@@ -62,16 +75,28 @@ namespace _Project.Scripts.Features.Interactable
             }
         }
 
-        private bool CheckOnItemInInventoryCondition(out string message)
+        private bool CheckOnItemInInventoryCondition(out string message, out Sprite sprite)
         {
+            sprite = null;
+            message = string.Empty;
+            
             if (!_inventory.TryGetItemWithIdAndSlot(itemId, out var item, out var slot, isItemSelected))
             {
-                message = "necessary item not in inventory or not selected";
+                if (!_itemsStorage.TryGetItemStorableUnit(itemId, out var unit))
+                {
+                    message = $"no items that can interact with this object";
+                }
+                else
+                {
+                    message = $"you need {unit.unitName}";
+                    if (isItemSelected) message += " in your hand";
+                    sprite = unit.icon;
+                }
+                
                 return false;
             }
             _selectedItem = new KeyValuePair<int, Item>(slot, item);
             
-            message = string.Empty;
             return true;
         }
     }
