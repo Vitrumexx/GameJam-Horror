@@ -1,7 +1,6 @@
 using System.Collections;
 using _Project.Scripts.Features.UI;
 using UnityEngine;
-using TMPro;
 
 namespace _Project.Scripts.Features.Player
 {
