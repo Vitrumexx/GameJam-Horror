@@ -28,7 +28,6 @@ namespace _Project.Scripts.Features.Inventory
         [Header("UI")]
         public CanvasGroup inventoryUIStorage;
         public GameObject inventoryUnitPrefab;
-        public UIInfoArea hintArea;
         
         private Dictionary<int, ItemInventoryUnit> _inventory = new();
         private int _selectedSlot = 1;
@@ -36,7 +35,6 @@ namespace _Project.Scripts.Features.Inventory
 
         private EnemyNotifier _enemyNotifier;
         private bool _isInventoryVisible = false; 
-        private bool _isInventoryHintVisible = true;
 
         private void Start()
         {
@@ -131,11 +129,11 @@ namespace _Project.Scripts.Features.Inventory
         {
             if (!IsHintNeeded(out var nearestItem, out var nearestStorableUnit))
             {
-                if (_isInventoryHintVisible)
-                {
-                    _pickUpHintItem = null;
-                    HideInventoryHint();
-                }
+                // if (_isInventoryHintVisible)
+                // {
+                //     _pickUpHintItem = null;
+                //     HideInventoryHint();
+                // }
 
                 return;
             }
@@ -143,7 +141,7 @@ namespace _Project.Scripts.Features.Inventory
             if (_pickUpHintItem == nearestItem) return;
             _pickUpHintItem = nearestItem;
 
-            ShowInventoryHint($"Чтобы поднять предмет, нажмите {config.pickUpItemKey}.", nearestStorableUnit.icon);
+            // ShowInventoryHint($"Чтобы поднять предмет, нажмите {config.pickUpItemKey}.", nearestStorableUnit.icon);
         }
 
         private bool IsHintNeeded(out Item nearestItem, out ItemStorableUnit nearestStorableUnit)
@@ -163,21 +161,21 @@ namespace _Project.Scripts.Features.Inventory
             return true;
         }
 
-        private void ShowInventoryHint(string hint, Sprite icon = null)
-        {
-            _isInventoryHintVisible = true;
-            
-            hintArea.gameObject.SetActive(true);
-            hintArea.text.text = hint;
-            if (icon is not null) hintArea.icon.sprite = icon;
-        }
+        // private void ShowInventoryPickUpHint(string hint, Sprite icon = null)
+        // {
+        //     _isInventoryHintVisible = true;
+        //     
+        //     hintArea.gameObject.SetActive(true);
+        //     hintArea.text.text = hint;
+        //     if (icon is not null) hintArea.icon.sprite = icon;
+        // }
 
-        private void HideInventoryHint()
-        {
-            _isInventoryHintVisible = false;
-            
-            hintArea.gameObject.SetActive(false);
-        }
+        // private void HideInventoryHint()
+        // {
+        //     _isInventoryHintVisible = false;
+        //     
+        //     hintArea.gameObject.SetActive(false);
+        // }
 
         private void OnChangeSelectedSlot(int slot)
         {
