@@ -42,5 +42,10 @@ namespace _Project.Scripts.Features.Items
             transform.rotation = pickUpStorage.rotation;
             _rigidbody.isKinematic = true;
         }
+
+        private void OnDestroy()
+        {
+            _itemsRegistrator?.UnregisterItem(this);
+        }
     }
 }
