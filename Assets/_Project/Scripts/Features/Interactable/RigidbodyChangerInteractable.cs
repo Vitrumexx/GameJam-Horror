@@ -2,7 +2,6 @@ using UnityEngine;
 
 namespace _Project.Scripts.Features.Interactable
 {
-    [RequireComponent(typeof(Rigidbody), typeof(Collider))]
     public class RigidbodyChangerInteractable : Interactable
     {
         [Header("Changes on interact")]
