@@ -14,13 +14,25 @@ namespace _Project.Scripts.Features.UI
             Clear();
         }
 
-        public void Select()
+        public virtual void SetSelected(bool isSelected)
+        {
+            if (isSelected)
+            {
+                Select();
+            }
+            else
+            {
+                Deselect();
+            }
+        }
+
+        protected virtual void Select()
         {
             selectedFrame.gameObject.SetActive(true);
             deselectedFrame.gameObject.SetActive(false);
         }
 
-        public void Deselect()
+        protected virtual void Deselect()
         {
             selectedFrame.gameObject.SetActive(false);
             deselectedFrame.gameObject.SetActive(true);

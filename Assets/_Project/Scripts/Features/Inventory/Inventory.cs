@@ -183,10 +183,10 @@ namespace _Project.Scripts.Features.Inventory
                 return;
             }
             
-            prevSelectedSlot.Deselect();
+            prevSelectedSlot.SetSelected(false);
             prevSelectedSlot.Item?.gameObject.SetActive(false);
             
-            nextSelectedSlot.Select();
+            nextSelectedSlot.SetSelected(true);
             if (nextSelectedSlot.Item is not null)
             {
                 nextSelectedSlot.Item.gameObject.SetActive(true);
