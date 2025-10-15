@@ -4,32 +4,37 @@ using UnityEngine;
 
 namespace _Project.Scripts.Features.Items.Weapon
 {
-    [RequireComponent(typeof(Item))]
+    [RequireComponent(typeof(Item), typeof(Rigidbody), typeof(Collider))]
     public abstract class WeaponItem : MonoBehaviour
     {
-        private static string OverlayTag = "WeaponItem";
+        protected static string OverlayTag = "WeaponItem";
         public KeyCode attackKey = KeyCode.Mouse0;
 
         [InfoBox("Оставь пустым, чтобы выбрать все")]
         public string[] damagableTags;
 
-        private Item _item;
-        private PlayerOverlay _playerOverlay;
+        protected Item _item;
+        protected PlayerOverlay _playerOverlay;
+        protected Rigidbody _rigidbody;
+        protected Inventory.Inventory _inventory;
 
         private void Awake()
         {
             OverlayTag += GetHashCode().ToString();
         }
 
-        private void Start()
+        protected virtual void Start()
         {
+            _rigidbody = GetComponent<Rigidbody>();
             _playerOverlay = FindObjectOfType<PlayerOverlay>();
             _item = GetComponent<Item>();
+            _inventory = FindObjectOfType<Inventory.Inventory>();
 
             if (_item is null) return;
 
             _item.OnSelected += ShowWeaponHint;
             _item.OnDeselected += HideWeaponHint;
+            _item.OnDrop += HideWeaponHint;
         }
 
         private void Update()
@@ -37,12 +42,13 @@ namespace _Project.Scripts.Features.Items.Weapon
             HandleAttack();
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             if (_item is null) return;
 
             _item.OnSelected -= ShowWeaponHint;
             _item.OnDeselected -= HideWeaponHint;
+            _item.OnDrop -= HideWeaponHint;
         }
 
         protected abstract void Attack();
