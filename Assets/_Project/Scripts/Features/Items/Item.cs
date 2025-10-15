@@ -19,6 +19,8 @@ namespace _Project.Scripts.Features.Items
         public bool IsSelected { get; private set; }
         public event Action OnSelected;
         public event Action OnDeselected;
+        public event Action OnPickup;
+        public event Action OnDrop;
 
         public void Start()
         {
@@ -35,7 +37,7 @@ namespace _Project.Scripts.Features.Items
 
         public void Drop(Transform droppedStorage)
         {
-            OnDeselected?.Invoke();
+            OnDrop?.Invoke();
             
             IsDropped = true;
 
@@ -47,6 +49,7 @@ namespace _Project.Scripts.Features.Items
 
         public void PickUp(Transform pickUpStorage)
         {
+            OnPickup?.Invoke();
             IsDropped = false;
 
             transform.SetParent(pickUpStorage);
