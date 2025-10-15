@@ -69,9 +69,9 @@ namespace _Project.Scripts.Features.Items
 
         public void SetIsSelected(bool isSelected)
         {
-            isSelected = IsSelected;
+            IsSelected = isSelected;
 
-            if (isSelected)
+            if (IsSelected)
             {
                 OnSelected?.Invoke();
             }
