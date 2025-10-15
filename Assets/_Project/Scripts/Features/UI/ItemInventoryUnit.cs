@@ -6,6 +6,12 @@ namespace _Project.Scripts.Features.UI
     {
         public Item Item { get; private set; }
 
+        public override void SetSelected(bool isSelected)
+        {
+            base.SetSelected(isSelected);
+            Item?.SetIsSelected(isSelected);
+        }
+
         public void SetItem(Item item, ItemStorableUnit itemStorableUnit)
         {
             Item = item;

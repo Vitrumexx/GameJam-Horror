@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace _Project.Scripts.Features.Items
@@ -13,6 +14,10 @@ namespace _Project.Scripts.Features.Items
         private Collider _collider;
         private Rigidbody _rigidbody;
         private ItemsRegistrator _itemsRegistrator;
+        
+        public bool IsSelected { get; private set; }
+        public event Action OnSelected;
+        public event Action OnDeselected;
 
         public void Start()
         {
@@ -27,6 +32,8 @@ namespace _Project.Scripts.Features.Items
 
         public void Drop(Transform droppedStorage)
         {
+            OnDeselected?.Invoke();
+            
             IsDropped = true;
 
             transform.SetParent(droppedStorage);
@@ -47,7 +54,23 @@ namespace _Project.Scripts.Features.Items
 
         private void OnDestroy()
         {
+            OnDeselected?.Invoke();
+            
             _itemsRegistrator?.UnregisterItem(this);
+        }
+
+        public void SetIsSelected(bool isSelected)
+        {
+            isSelected = IsSelected;
+
+            if (isSelected)
+            {
+                OnSelected?.Invoke();
+            }
+            else
+            {
+                OnDeselected?.Invoke();
+            }
         }
     }
 }
