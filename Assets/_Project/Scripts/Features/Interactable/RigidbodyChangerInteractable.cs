@@ -8,18 +8,14 @@ namespace _Project.Scripts.Features.Interactable
         [Header("Changes on interact")]
         public bool isKinematic = false;
 
-        private Rigidbody _rigidbody;
-        
-        protected override void Start()
-        {
-            base.Start();
-            
-            _rigidbody = GetComponent<Rigidbody>();
-        }
+        public Rigidbody[] rigidbodies;
         
         protected override void Interact()
         {
-            _rigidbody.isKinematic = isKinematic;
+            foreach (var rb in rigidbodies)
+            {
+                rb.isKinematic = isKinematic;
+            }
         }
     }
 }

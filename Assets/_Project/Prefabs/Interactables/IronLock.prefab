@@ -188,6 +188,8 @@ MonoBehaviour:
   isItemSelected: 1
   isDelItemOnUse: 1
   isKinematic: 0
+  rigidbodies:
+  - {fileID: 1025245198622086692}
 --- !u!1 &8167737362555736596
 GameObject:
   m_ObjectHideFlags: 0
