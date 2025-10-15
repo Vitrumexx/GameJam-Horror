@@ -9,6 +9,7 @@ namespace _Project.Scripts.Features.Interactable
         [Header("Config")]
         public bool isInteractable = true;
         public InteractConditions interactCondition = InteractConditions.OnAnyConditions;
+        public bool isChangeIsInteractableOnInteract = true;
 
         [Header("Condition on item in inventory config")]
         public string itemId;
@@ -32,6 +33,8 @@ namespace _Project.Scripts.Features.Interactable
         {
             isInteractable = false;
             Interact();
+
+            if (isChangeIsInteractableOnInteract) isInteractable = false;
 
             if (!isDelItemOnUse) return;
             
