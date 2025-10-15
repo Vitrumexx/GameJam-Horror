@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 2354143650244155538}
   serializedVersion: 2
   m_LocalRotation: {x: -0.38897496, y: -0.4654433, z: 0.15946917, w: 0.778865}
-  m_LocalPosition: {x: 22.858313, y: 4.6985745, z: 12.497419}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 119.3, y: 119.3, z: 119.3}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -127,6 +127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: crowbar
   isPickupable: 1
+  localScaleModifierOnPickUp: 0.5
 --- !u!65 &5949607842276019818
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -29,8 +29,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 689947002441924066}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.055442013, y: -0.8941149, z: -0.014553532, w: 0.44415432}
-  m_LocalPosition: {x: 24.25703, y: 4.2686934, z: 11.334163}
+  m_LocalRotation: {x: -0.31210956, y: -0.8241026, z: -0.4488754, w: 0.14816691}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 25, y: 25, z: 25}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -127,6 +127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: iron_key
   isPickupable: 1
+  localScaleModifierOnPickUp: 0.5
 --- !u!65 &8635968742414779740
 BoxCollider:
   m_ObjectHideFlags: 0
