@@ -255,6 +255,7 @@ namespace _Project.Scripts.Features.Inventory
             }
             else
             {
+                item.SetIsSelected(true);
                 ShowDropHint();
             }
 
