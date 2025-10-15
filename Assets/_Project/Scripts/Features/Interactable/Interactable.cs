@@ -30,6 +30,7 @@ namespace _Project.Scripts.Features.Interactable
 
         public void ProcessInteract()
         {
+            isInteractable = false;
             Interact();
 
             if (!isDelItemOnUse) return;
