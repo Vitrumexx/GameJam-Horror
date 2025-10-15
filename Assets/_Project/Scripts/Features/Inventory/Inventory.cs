@@ -328,5 +328,20 @@ namespace _Project.Scripts.Features.Inventory
             
             return item is not null;
         }
+
+        public bool TryGetSlotOfItemInInventory(Item item, out int slot)
+        {
+            slot = -1;
+            
+            foreach (var inventorySlot in _inventory)
+            {
+                if (inventorySlot.Value.Item is null || inventorySlot.Value.Item != item) continue;
+                
+                slot = inventorySlot.Key;
+                break;
+            }
+
+            return slot >= 1;
+        }
     }
 }
