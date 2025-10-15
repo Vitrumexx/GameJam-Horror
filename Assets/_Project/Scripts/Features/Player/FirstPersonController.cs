@@ -79,6 +79,8 @@ namespace _Project.Scripts.Features.Player
         public bool enableJump = true;
         public KeyCode jumpKey = KeyCode.Space;
         public float jumpPower = 5f;
+        public float distanceToGround = .75f;
+        public float gravitationMultiplier = 0f;
 
         // Internal Variables
         private bool isGrounded = false;
@@ -337,6 +339,11 @@ namespace _Project.Scripts.Features.Player
 
         void FixedUpdate()
         {
+            if (!isGrounded)
+            {
+                rb.AddForce(Physics.gravity * gravitationMultiplier);
+            }
+            
             #region Movement
 
             if (playerCanMove)
@@ -417,11 +424,10 @@ namespace _Project.Scripts.Features.Player
         {
             Vector3 origin = new Vector3(transform.position.x, transform.position.y - (transform.localScale.y * .5f), transform.position.z);
             Vector3 direction = transform.TransformDirection(Vector3.down);
-            float distance = .75f;
 
-            if (Physics.Raycast(origin, direction, out RaycastHit hit, distance))
+            if (Physics.Raycast(origin, direction, out RaycastHit hit, distanceToGround))
             {
-                Debug.DrawRay(origin, direction * distance, Color.red);
+                Debug.DrawRay(origin, direction * distanceToGround, Color.red);
                 isGrounded = true;
             }
             else
@@ -435,7 +441,10 @@ namespace _Project.Scripts.Features.Player
             // Adds force to the player rigidbody to jump
             if (isGrounded)
             {
-                rb.AddForce(0f, jumpPower, 0f, ForceMode.Impulse);
+                Vector3 velocity = rb.velocity;
+                velocity.y = jumpPower;
+                rb.velocity = velocity;
+                
                 isGrounded = false;
             }
 

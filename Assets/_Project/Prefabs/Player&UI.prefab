@@ -434,7 +434,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 21.2, y: 1.14, z: 7.5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 3, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6536603180909250972}
@@ -521,7 +521,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7693804772774735387}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -556,7 +556,7 @@ MonoBehaviour:
   fov: 60
   invertCamera: 0
   cameraCanMove: 1
-  mouseSensitivity: 2
+  mouseSensitivity: 1.5
   maxLookAngle: 50
   lockCursor: 1
   crosshair: 1
@@ -567,18 +567,18 @@ MonoBehaviour:
   holdToZoom: 0
   zoomKey: 324
   zoomFOV: 30
-  zoomStepTime: 5
+  zoomStepTime: 15
   playerCanMove: 1
-  walkSpeed: 5
+  walkSpeed: 15
   maxVelocityChange: 10
   enableSprint: 1
   unlimitedSprint: 0
   sprintKey: 304
-  sprintSpeed: 7
-  sprintDuration: 5
-  sprintCooldown: 0.5
+  sprintSpeed: 20
+  sprintDuration: 3
+  sprintCooldown: 1
   sprintFOV: 80
-  sprintFOVStepTime: 10
+  sprintFOVStepTime: 15
   useSprintBar: 1
   hideBarWhenFull: 1
   sprintBarBG: {fileID: 7330556627740188940}
@@ -588,15 +588,17 @@ MonoBehaviour:
   sprintBarCG: {fileID: 1064997061975316232}
   enableJump: 1
   jumpKey: 32
-  jumpPower: 5
-  enableCrouch: 1
+  jumpPower: 11
+  distanceToGround: 2
+  gravitationMultiplier: 3
+  enableCrouch: 0
   holdToCrouch: 1
   crouchKey: 306
   crouchHeight: 0.75
   speedReduction: 0.5
   enableHeadBob: 1
   joint: {fileID: 6536603180909250972}
-  bobSpeed: 10
+  bobSpeed: 7
   bobAmount: {x: 0.15, y: 0.05, z: 0}
 --- !u!1 &8470397806028654666
 GameObject:
