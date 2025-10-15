@@ -14,6 +14,7 @@ namespace _Project.Scripts.Features.Items
         private Collider _collider;
         private Rigidbody _rigidbody;
         private ItemsRegistrator _itemsRegistrator;
+        private Inventory.Inventory _inventory;
         
         public bool IsSelected { get; private set; }
         public event Action OnSelected;
@@ -25,9 +26,11 @@ namespace _Project.Scripts.Features.Items
 
             _rigidbody = GetComponent<Rigidbody>();
             _collider = GetComponent<Collider>();
-            _itemsRegistrator = FindAnyObjectByType<ItemsRegistrator>();
             
+            _itemsRegistrator = FindAnyObjectByType<ItemsRegistrator>();
             _itemsRegistrator?.RegisterItem(this);
+            
+            _inventory = FindAnyObjectByType<Inventory.Inventory>();
         }
 
         public void Drop(Transform droppedStorage)
@@ -37,8 +40,9 @@ namespace _Project.Scripts.Features.Items
             IsDropped = true;
 
             transform.SetParent(droppedStorage);
-            _rigidbody.isKinematic = false;
-            _collider.isTrigger = false;
+            
+            if (_rigidbody is not null) _rigidbody.isKinematic = false;
+            if (_collider is not null) _collider.isTrigger = false;
         }
 
         public void PickUp(Transform pickUpStorage)
@@ -48,13 +52,17 @@ namespace _Project.Scripts.Features.Items
             transform.SetParent(pickUpStorage);
             transform.position = pickUpStorage.position;
             transform.rotation = pickUpStorage.rotation;
-            _rigidbody.isKinematic = true;
-            _collider.isTrigger = true;
+            
+            if (_rigidbody is not null) _rigidbody.isKinematic = true;
+            if (_collider is not null) _collider.isTrigger = true;
         }
 
         private void OnDestroy()
         {
-            OnDeselected?.Invoke();
+            if (_inventory?.TryGetSlotOfItemInInventory(this, out var slot) == true)
+            {
+                _inventory.DropItem(slot);
+            }
             
             _itemsRegistrator?.UnregisterItem(this);
         }
