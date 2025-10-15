@@ -15,6 +15,7 @@ namespace _Project.Scripts.Features.Items
         private Rigidbody _rigidbody;
         private ItemsRegistrator _itemsRegistrator;
         private Inventory.Inventory _inventory;
+        private Vector3 _localScale;
         
         public bool IsSelected { get; private set; }
         public event Action OnSelected;
@@ -25,7 +26,9 @@ namespace _Project.Scripts.Features.Items
         public void Start()
         {
             if (id == string.Empty) Debug.LogWarning($"No item {gameObject.name} ID specified!");
-
+            
+            _localScale = transform.localScale;
+            
             _rigidbody = GetComponent<Rigidbody>();
             _collider = GetComponent<Collider>();
             
@@ -45,6 +48,7 @@ namespace _Project.Scripts.Features.Items
             
             if (_rigidbody is not null) _rigidbody.isKinematic = false;
             if (_collider is not null) _collider.isTrigger = false;
+            transform.localScale = _localScale;
         }
 
         public void PickUp(Transform pickUpStorage)
@@ -52,7 +56,7 @@ namespace _Project.Scripts.Features.Items
             OnPickup?.Invoke();
             IsDropped = false;
 
-            transform.SetParent(pickUpStorage);
+            transform.SetParent(pickUpStorage, true);
             transform.position = pickUpStorage.position;
             transform.rotation = pickUpStorage.rotation;
             
