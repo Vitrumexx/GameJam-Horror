@@ -7,7 +7,7 @@ namespace _Project.Scripts.Features.Items.Weapon
     [RequireComponent(typeof(Item), typeof(Rigidbody), typeof(Collider))]
     public abstract class WeaponItem : MonoBehaviour
     {
-        protected static string OverlayTag = "WeaponItem";
+        protected string OverlayTag = "WeaponItem";
         public KeyCode attackKey = KeyCode.Mouse0;
 
         [InfoBox("Оставь пустым, чтобы выбрать все")]
@@ -20,7 +20,7 @@ namespace _Project.Scripts.Features.Items.Weapon
 
         private void Awake()
         {
-            OverlayTag += GetHashCode().ToString();
+            OverlayTag += gameObject.GetInstanceID().ToString();
         }
 
         protected virtual void Start()

@@ -295,6 +295,7 @@ namespace _Project.Scripts.Features.Inventory
             item.Drop(droppedItemParentTransform);
             _inventory[_selectedSlot].Clear();
             HideDropHint();
+            item.SetIsSelected(false);
 
             if (!itemsStorage.TryGetItemStorableUnit(item.id, out var itemStorableUnit))
             {
