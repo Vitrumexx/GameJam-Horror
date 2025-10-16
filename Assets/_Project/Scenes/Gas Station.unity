@@ -2799,8 +2799,11 @@ MonoBehaviour:
     cutsceneObject: {fileID: 803374762}
   - cutsceneKey: Departure
     cutsceneObject: {fileID: 1869642971}
+  - cutsceneKey: CashierDialogue
+    cutsceneObject: {fileID: 2109830657}
   spawnPoints:
   - {fileID: 1243728642}
+  - {fileID: 0}
   playerPrefab: {fileID: 1155163677}
 --- !u!114 &211657742
 MonoBehaviour:
@@ -9503,6 +9506,136 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1 &686181724
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 686181728}
+  - component: {fileID: 686181727}
+  - component: {fileID: 686181725}
+  - component: {fileID: 686181726}
+  m_Layer: 0
+  m_Name: ScriptableZone#4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &686181725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686181724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: 415fed4c83950414596ac30c86742457, type: 2}
+    - {fileID: 11400000, guid: 96499c8861643484cbc5c9f7b0b3cb1f, type: 2}
+    - {fileID: 11400000, guid: a3995224ce7348b45b2dbe04aa167d56, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 686181726}
+          m_TargetAssemblyTypeName: CashierDialogue, Assembly-CSharp
+          m_MethodName: Phrase
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 686181726}
+          m_TargetAssemblyTypeName: CashierDialogue, Assembly-CSharp
+          m_MethodName: FreezePlayer
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 686181726}
+          m_TargetAssemblyTypeName: CashierDialogue, Assembly-CSharp
+          m_MethodName: UnfreezePlayer
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!114 &686181726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686181724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32f52e1c96e1f384da8673155d0cf353, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1155163677}
+  TMPtext: {fileID: 343801720}
+  counter: {fileID: 1989477475}
+--- !u!65 &686181727
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686181724}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.03, y: 0.02, z: 0.02}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &686181728
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686181724}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.5, y: 0.49999997, z: 0.5, w: -0.5}
+  m_LocalPosition: {x: 502.56, y: 12.7, z: 475.97}
+  m_LocalScale: {x: 300, y: 300, z: 300}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1989477474}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &687915862
 GameObject:
   m_ObjectHideFlags: 0
@@ -17555,6 +17688,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TMPtext: {fileID: 343801720}
+  counter: {fileID: 1989477475}
 --- !u!114 &1356176760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24423,6 +24557,7 @@ Transform:
   - {fileID: 1356176757}
   - {fileID: 1795784355}
   - {fileID: 387518923}
+  - {fileID: 686181728}
   m_Father: {fileID: 1077560994}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1989477475
@@ -26213,6 +26348,59 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.024024405, y: 0.0062784147, z: 0.016402155}
   m_Center: {x: 0.0000002370216, y: -0.0012015754, z: 0.0006772376}
+--- !u!1 &2109830657
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2109830659}
+  - component: {fileID: 2109830658}
+  m_Layer: 0
+  m_Name: CashierDialogue
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!320 &2109830658
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2109830657}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: 93897c34d07501b49810dabf5c650b94, type: 2}
+  m_InitialState: 1
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: -69959970735461923, guid: 93897c34d07501b49810dabf5c650b94, type: 2}
+    value: {fileID: 686181725}
+  - key: {fileID: 700153511653310193, guid: 93897c34d07501b49810dabf5c650b94, type: 2}
+    value: {fileID: 211657740}
+  m_ExposedReferences:
+    m_References: []
+--- !u!4 &2109830659
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2109830657}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 443.15622, y: -2.6765745, z: 498.74118}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2110327136
 GameObject:
   m_ObjectHideFlags: 0
@@ -46667,13 +46855,42 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8269343805640792611, guid: ce1168b1cdbccbb45987d19713a4acde, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5852782305729209222}
   m_SourcePrefab: {fileID: 100100000, guid: ce1168b1cdbccbb45987d19713a4acde, type: 3}
 --- !u!4 &5852782305729209220 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5150518731311648872, guid: ce1168b1cdbccbb45987d19713a4acde, type: 3}
   m_PrefabInstance: {fileID: 5852782305729209219}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5852782305729209221 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8269343805640792611, guid: ce1168b1cdbccbb45987d19713a4acde, type: 3}
+  m_PrefabInstance: {fileID: 5852782305729209219}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5852782305729209222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5852782305729209221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63d01cb0754745a4a9aa451be34cffe9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isInteractable: 1
+  interactCondition: 1
+  isChangeIsInteractableOnInteract: 1
+  itemId: 
+  isItemSelected: 0
+  isDelItemOnUse: 1
+  onInteract:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &5858014128697532434
 Transform:
   m_ObjectHideFlags: 0
@@ -57913,3 +58130,4 @@ SceneRoots:
   - {fileID: 583433486}
   - {fileID: 803374764}
   - {fileID: 1869642973}
+  - {fileID: 2109830659}

@@ -1,17 +1,19 @@
 using TMPro;
 using UnityEngine;
 
-public class Trashbox_Screamer : MonoBehaviour
+public class CashierDialogue : MonoBehaviour
 {
+    public GameObject player;
     public TextMeshProUGUI TMPtext;
     private bool PlayerInZone = false;
     public TaskCounter counter;
+
     void Update()
     {
         if (PlayerInZone)
             if (Input.GetKeyDown(KeyCode.F))
             {
-                CutsceneSignals.Instance.StartCutscene("Trashbox_Screamer");
+                CutsceneSignals.Instance.StartCutscene("CashierDialogue");
                 counter.TaskCompleted += 1;
                 Destroy(gameObject);
             }
@@ -31,6 +33,16 @@ public class Trashbox_Screamer : MonoBehaviour
 
     public void Phrase()
     {
-        TMPtext.text = "This bum came out so unexpectable, I almost shit my pants.";
+        TMPtext.text = "I bought a snack and paid for gas. It was time to continue my ride.";
+    }
+
+    public void FreezePlayer()
+    {
+        player.GetComponent<Rigidbody>().isKinematic = true;
+    }
+
+    public void UnfreezePlayer()
+    {
+        player.GetComponent<Rigidbody>().isKinematic = false;
     }
 }
