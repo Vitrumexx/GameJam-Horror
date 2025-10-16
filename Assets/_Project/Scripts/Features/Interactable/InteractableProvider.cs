@@ -19,8 +19,11 @@ namespace _Project.Scripts.Features.Interactable
         
         [Header("Config")]
         public KeyCode interactKey = KeyCode.E;
+        public Color blinkColor = Color.red;
+        public float blinkDuration = 0.2f;
         
         private Interactable _closestInteractable;
+        private Interactable _lastInteractable;
         private bool _isOverlayVisible = false;
         private static readonly string OverlayTag = "InteractableProvider";
         
@@ -29,6 +32,7 @@ namespace _Project.Scripts.Features.Interactable
             SearchForClosestInteractable();
             SetOverlay();
             HandleInteract();
+            HandleHighlight();
         }
 
         private void SearchForClosestInteractable()
@@ -79,6 +83,16 @@ namespace _Project.Scripts.Features.Interactable
             }
             
             _closestInteractable.ProcessInteract();
+        }
+
+        private void HandleHighlight()
+        {
+            if (_lastInteractable == _closestInteractable) return;
+
+            _lastInteractable?.StopBlink();
+            _closestInteractable?.StartBlink(blinkColor, blinkDuration);
+            
+            _lastInteractable = _closestInteractable;
         }
     }
 }

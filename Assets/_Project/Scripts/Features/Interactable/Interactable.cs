@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using _Project.Scripts.Features.Effects;
 using _Project.Scripts.Features.Items;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _Project.Scripts.Features.Interactable
@@ -9,6 +11,7 @@ namespace _Project.Scripts.Features.Interactable
         [Header("Config")]
         public bool isInteractable = true;
         public InteractConditions interactCondition = InteractConditions.OnAnyConditions;
+        public bool isChangeIsInteractableOnInteract = true;
 
         [Header("Condition on item in inventory config")]
         public string itemId;
@@ -19,7 +22,10 @@ namespace _Project.Scripts.Features.Interactable
         private Inventory.Inventory _inventory;
         private ItemsStorage _itemsStorage;
         private KeyValuePair<int, Item> _selectedItem;
-
+        private Coroutine _blinkRoutine;
+        private readonly HashSet<MeshRenderer> _meshRenderers = new();
+        private MaterialBlinker _materialBlinker;
+        
         public enum InteractConditions
         {
             OnAnyConditions = 0,
@@ -33,6 +39,8 @@ namespace _Project.Scripts.Features.Interactable
             isInteractable = false;
             Interact();
 
+            if (isChangeIsInteractableOnInteract) isInteractable = false;
+
             if (!isDelItemOnUse) return;
             
             _inventory.DropItem(_selectedItem.Key);
@@ -41,11 +49,16 @@ namespace _Project.Scripts.Features.Interactable
 
         protected virtual void Start()
         {
+            _materialBlinker = FindAnyObjectByType<MaterialBlinker>();
             _interactableProvider = FindObjectOfType<InteractableProvider>();
             _interactableProvider?.RegisterItem(this);
             
             _inventory = FindObjectOfType<Inventory.Inventory>();
             _itemsStorage = FindObjectOfType<ItemsStorage>();
+            
+            _meshRenderers.AddRange(GetComponentsInChildren<MeshRenderer>());
+            var selfComponent = GetComponent<MeshRenderer>();
+            if (selfComponent is not null) _meshRenderers.Add(selfComponent);
         }
 
         protected virtual void OnDestroy()
@@ -99,6 +112,26 @@ namespace _Project.Scripts.Features.Interactable
             _selectedItem = new KeyValuePair<int, Item>(slot, item);
             
             return true;
+        }
+
+        public void StartBlink(Color blinkColor, float duration)
+        {
+            if (_materialBlinker is null) return;
+
+            foreach (var meshRenderer in _meshRenderers)
+            {
+                _materialBlinker.StartBlink(meshRenderer, blinkColor, duration);
+            }
+        }
+
+        public void StopBlink()
+        {
+            if (_materialBlinker is null) return;
+            
+            foreach (var meshRenderer in _meshRenderers)
+            {
+                _materialBlinker.StopBlink(meshRenderer);
+            }
         }
     }
 }

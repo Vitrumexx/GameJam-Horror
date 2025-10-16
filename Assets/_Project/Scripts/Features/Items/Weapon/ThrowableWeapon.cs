@@ -1,4 +1,5 @@
 using System.Linq;
+using _Project.Scripts.Features.Player;
 using UnityEngine;
 using _Project.Scripts.Features.Shared;
 
@@ -10,16 +11,28 @@ namespace _Project.Scripts.Features.Items.Weapon
         public bool destroyOnLifeTime = false; 
         public float lifetime = 5f;
         public float throwForce = 20f;
+        public bool isTurnOffTheDangerZoneOnZeroVelocity = true;
         
-        public Camera playerCamera;
-        
+        private FirstPersonController _fpsController;
         private bool _isThrown = false;
+        private bool _isDangerZoneActive = false;
 
         protected override void Start()
         {
             base.Start();
+            
+            _fpsController = FindObjectOfType<FirstPersonController>();
 
             _item.OnPickup += ChangeIsThrownToFalse;
+        }
+
+        protected virtual void Update()
+        {
+            if (!_isThrown) return;
+
+            if (!isTurnOffTheDangerZoneOnZeroVelocity) return;
+
+            if (_rigidbody.velocity.magnitude < 0.1f) _isDangerZoneActive = false;
         }
 
         protected override void OnDestroy()
@@ -42,18 +55,20 @@ namespace _Project.Scripts.Features.Items.Weapon
             
             _inventory.DropItem(slot);
 
-            transform.position = playerCamera.transform.position;
-            transform.rotation = playerCamera.transform.rotation;
+            transform.position = _fpsController.playerCamera.transform.position;
+            transform.rotation = _fpsController.playerCamera.transform.rotation;
             
-            _rigidbody.velocity = playerCamera.transform.forward * throwForce;
+            _rigidbody.velocity = _fpsController.playerCamera.transform.forward * throwForce;
+            
             _isThrown = true;
+            _isDangerZoneActive = true;
 
             if (destroyOnLifeTime) Destroy(gameObject, lifetime);
         }
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (!_isThrown) return;
+            if (!_isThrown || !_isDangerZoneActive) return;
 
             if (collision.collider.TryGetComponent(out Damagable damagable) 
                 && damagableTags.Contains(damagable.damagableTag))

@@ -10,12 +10,15 @@ namespace _Project.Scripts.Features.Items
         public string id = string.Empty;
         public bool IsDropped { get; set; } = true;
         public bool isPickupable = true;
+        public float localScaleModifierOnPickUp = 0.5f;
         
         private Collider _collider;
         private Rigidbody _rigidbody;
         private ItemsRegistrator _itemsRegistrator;
         private Inventory.Inventory _inventory;
         private Vector3 _localScale;
+        private ItemsStorage _itemsStorage;
+        private ItemStorableUnit _itemStorableUnit;
         
         public bool IsSelected { get; private set; }
         public event Action OnSelected;
@@ -36,6 +39,8 @@ namespace _Project.Scripts.Features.Items
             _itemsRegistrator?.RegisterItem(this);
             
             _inventory = FindAnyObjectByType<Inventory.Inventory>();
+            _itemsStorage = FindAnyObjectByType<ItemsStorage>();
+            _itemsStorage.TryGetItemStorableUnit(id, out _itemStorableUnit);
         }
 
         public void Drop(Transform droppedStorage)
@@ -57,8 +62,13 @@ namespace _Project.Scripts.Features.Items
             IsDropped = false;
 
             transform.SetParent(pickUpStorage, true);
-            transform.position = pickUpStorage.position;
-            transform.rotation = pickUpStorage.rotation;
+            
+            if (_itemStorableUnit is not null)
+            {
+                transform.localRotation = _itemStorableUnit.itemPrefab.transform.rotation;
+                transform.localPosition = _itemStorableUnit.itemPrefab.transform.position;
+            }
+            transform.localScale = _localScale * localScaleModifierOnPickUp;
             
             if (_rigidbody is not null) _rigidbody.isKinematic = true;
             if (_collider is not null) _collider.isTrigger = true;
@@ -66,10 +76,10 @@ namespace _Project.Scripts.Features.Items
 
         private void OnDestroy()
         {
-            if (_inventory?.TryGetSlotOfItemInInventory(this, out var slot) == true)
-            {
-                _inventory.DropItem(slot);
-            }
+            // if (_inventory?.TryGetSlotOfItemInInventory(this, out var slot) == true)
+            // {
+            //     _inventory.DropItem(slot);
+            // }
             
             _itemsRegistrator?.UnregisterItem(this);
         }
