@@ -26,8 +26,10 @@ namespace _Project.Scripts.Features.Items.Weapon
             _item.OnPickup += ChangeIsThrownToFalse;
         }
 
-        protected virtual void Update()
+        protected override void Update()
         {
+            base.Update();
+            
             if (!_isThrown) return;
 
             if (!isTurnOffTheDangerZoneOnZeroVelocity) return;
