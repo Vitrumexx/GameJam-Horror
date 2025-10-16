@@ -119,8 +119,8 @@ namespace _Project.Scripts.Features.Player
                 if (shakeIntensity > 0f)
                 {
                     float shake = Mathf.Sin(elapsed * shakeFrequency) * shakeIntensity * (1 - t);
-                    shakeOffset.x = _randomProvider.GetRandomFloatInRange(-shake, shake);
-                    shakeOffset.y = _randomProvider.GetRandomFloatInRange(-shake, shake);
+                    shakeOffset.x = _randomProvider.InRange(-shake, shake);
+                    shakeOffset.y = _randomProvider.InRange(-shake, shake);
                     _rect.localPosition = basePosition + shakeOffset;
                 }
 

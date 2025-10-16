@@ -18,22 +18,22 @@ namespace _Project.Scripts.Features.Random
             _random = new System.Random(newSeed);
         }
 
-        public float GetRandomInt()
+        public float Int()
         {
             return _random.Next();
         }
 
-        public float GetRandomFloat()
+        public float Float()
         {
             return (float)_random.NextDouble();
         }
 
-        public float GetRandomFloatInRange(float min, float max)
+        public float InRange(float min, float max)
         {
             return (float)(_random.NextDouble() * (max - min) + min);
         }
 
-        public int GetRandomIntInRange(int min, int max)
+        public int InRange(int min, int max)
         {
             return _random.Next(min, max);
         }
