@@ -181,3 +181,6 @@ MonoBehaviour:
   id: trash_bag
   isPickupable: 1
   localScaleModifierOnPickUp: 0.5
+  messageOnPickup: I had some junk in my car, so I decided to throw it in a trash
+    can behind the station.
+  isOnlyOnFirstPickup: 0
