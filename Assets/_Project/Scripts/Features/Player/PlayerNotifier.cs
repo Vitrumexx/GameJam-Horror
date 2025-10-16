@@ -184,6 +184,9 @@ namespace _Project.Scripts.Features.Player
                 return;
             }
             
+            taskArea.transform.SetParent(taskTransform);
+            taskArea.transform.SetAsFirstSibling();
+            
             taskArea.text.text = task;
             taskArea.SetIsSolved(isSolved);
             taskArea.hideOnSolve = hideOnSolved;
