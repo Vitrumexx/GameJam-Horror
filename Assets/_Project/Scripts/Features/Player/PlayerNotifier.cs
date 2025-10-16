@@ -1,4 +1,5 @@
 using System.Collections;
+using _Project.Scripts.Features.Random;
 using _Project.Scripts.Features.UI;
 using UnityEngine;
 
@@ -30,12 +31,18 @@ namespace _Project.Scripts.Features.Player
         private Coroutine _textCoroutine;
         private Vector3 _originalScale;
         private RectTransform _rect;
+        private RandomProvider _randomProvider;
 
         private void Awake()
         {
             _rect = infoArea.GetComponent<RectTransform>();
             _originalScale = _rect.localScale;
             infoArea.gameObject.SetActive(false);
+        }
+
+        private void Start()
+        {
+            _randomProvider = FindAnyObjectByType<RandomProvider>();
         }
 
         public void NotifyPlayer(float duration, string msg, Sprite sprite = null)
@@ -112,8 +119,8 @@ namespace _Project.Scripts.Features.Player
                 if (shakeIntensity > 0f)
                 {
                     float shake = Mathf.Sin(elapsed * shakeFrequency) * shakeIntensity * (1 - t);
-                    shakeOffset.x = Random.Range(-shake, shake);
-                    shakeOffset.y = Random.Range(-shake, shake);
+                    shakeOffset.x = _randomProvider.InRange(-shake, shake);
+                    shakeOffset.y = _randomProvider.InRange(-shake, shake);
                     _rect.localPosition = basePosition + shakeOffset;
                 }
 
