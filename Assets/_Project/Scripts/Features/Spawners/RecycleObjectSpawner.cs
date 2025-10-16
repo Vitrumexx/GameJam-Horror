@@ -16,7 +16,7 @@ namespace _Project.Scripts.Features.Spawners
         
         [Header("Config")]
         [Min(0)] public int maxCount;
-        [MinMaxSlider(0, "maxCount", true)] public int minCount;
+        [MinValue(0), MaxValue("maxCount")] public int minCount;
         [Min(0)] public float spawnDelay = 0f;
         public bool isFirstSpawnDelayed = false;
         public float offsetDistance = 0.2f;
@@ -32,7 +32,7 @@ namespace _Project.Scripts.Features.Spawners
         {
             AsPrefab = 0,
             Random = 1,
-            AsPointRotation = 2
+            AsPoint = 2
         }
 
         private void Start()
@@ -59,11 +59,16 @@ namespace _Project.Scripts.Features.Spawners
 
         public void Update()
         {
-            _spawnedObjects.RemoveWhere(x => x.gameObject is null);
+            _spawnedObjects.RemoveWhere(x => x is null);
 
             if (_timeFromLastSpawn < spawnDelay)
             {
                 _timeFromLastSpawn += Time.deltaTime;
+                return;
+            }
+
+            if (_spawnedObjects.Count == maxCount)
+            {
                 return;
             }
 
@@ -80,9 +85,9 @@ namespace _Project.Scripts.Features.Spawners
                 return false;
             }
             
-            var obj = Instantiate(prefab, randPoint.position, Quaternion.identity);
-            obj.transform.SetParent(spawnTo);
-            
+            var obj = Instantiate(prefab, spawnTo, true);
+            obj.transform.position = randPoint.position;
+
             SetRotation(obj.transform, randPoint);
             
             _spawnedObjects.Add(obj);
@@ -94,7 +99,7 @@ namespace _Project.Scripts.Features.Spawners
         {
             switch (spawnRotationVariant)
             {
-                case SpawnRotationVariant.AsPointRotation:
+                case SpawnRotationVariant.AsPoint:
                 {
                     objTransform.localRotation = point.localRotation;
                     break;
