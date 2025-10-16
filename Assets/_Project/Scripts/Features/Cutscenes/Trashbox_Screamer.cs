@@ -7,18 +7,24 @@ public class Trashbox_Screamer : MonoBehaviour
     void Update()
     {
         if (PlayerInZone)
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.F))
             {
                 CutsceneSignals.Instance.StartCutscene("Trashbox_Screamer");
                 Destroy(gameObject);
             }
     }
 
-    void OnTriggerStay(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
             PlayerInZone = true;
     }
 
-   
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+            PlayerInZone = false;
+    }
+
+
 }

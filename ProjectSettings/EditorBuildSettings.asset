@@ -4,5 +4,14 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/_Project/Scenes/Lobby.unity
+    guid: 2f127fe4606b7dd4dbe671be104daf6b
+  - enabled: 1
+    path: Assets/_Project/Scenes/Gas Station.unity
+    guid: 3708198dfdd2fe240b9ba25679b2093b
+  - enabled: 1
+    path: Assets/_Project/Scenes/Mansion.unity
+    guid: cc8cfde806ac762448666feac52f3e99
   m_configObjects: {}
