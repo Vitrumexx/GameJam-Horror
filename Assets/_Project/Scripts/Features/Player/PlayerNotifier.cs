@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using _Project.Scripts.Features.Random;
 using _Project.Scripts.Features.UI;
 using UnityEngine;
@@ -12,6 +13,11 @@ namespace _Project.Scripts.Features.Player
         [Header("Notification Settings")]
         [SerializeField] private float notificationDuration = 2f;
         [SerializeField] private UIInfoArea infoArea;
+        
+        [Header("Task Settings")]
+        [SerializeField] private Transform taskTransform;
+        [SerializeField] private GameObject taskPrefab;
+        [SerializeField] private bool hideOnSolved = false;
 
         [Header("Animation Mode")]
         [SerializeField] private AnimationMode animationMode = AnimationMode.Bomb;
@@ -32,6 +38,7 @@ namespace _Project.Scripts.Features.Player
         private Vector3 _originalScale;
         private RectTransform _rect;
         private RandomProvider _randomProvider;
+        private Dictionary<string, UITaskArea> _tasks;
 
         private void Awake()
         {
@@ -151,6 +158,42 @@ namespace _Project.Scripts.Features.Player
                     yield return new WaitForSeconds(letterDelay);
                 }
             }
+        }
+
+        public void UpdateTask(string taskId, bool isSolved = false, string task = "")
+        {
+            if (!_tasks.TryGetValue(taskId, out var taskArea))
+            {
+                AddTask(taskId, task, isSolved);
+                return;
+            }
+
+            if (task != string.Empty) taskArea.text.text = task;
+            taskArea.SetIsSolved(isSolved);
+        }
+
+        public void AddTask(string taskId, string task, bool isSolved)
+        {
+            if (_tasks.ContainsKey(taskId)) return;
+
+            var taskObj = Instantiate(taskPrefab);
+
+            if (!taskObj.TryGetComponent(out UITaskArea taskArea) || !_tasks.TryAdd(taskId, taskArea)) 
+            {
+                Destroy(taskObj);
+                return;
+            }
+            
+            taskArea.text.text = task;
+            taskArea.SetIsSolved(isSolved);
+            taskArea.hideOnSolve = hideOnSolved;
+        }
+
+        public void RemoveTask(string taskId)
+        {
+            if (!_tasks.Remove(taskId, out var task)) return;
+            
+            Destroy(task.gameObject);
         }
     }
 }
