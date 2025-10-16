@@ -10073,6 +10073,11 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.024024416, y: 0.00627842, z: 0.016402163}
   m_Center: {x: -0.00000012060627, y: -0.0012019335, z: 0.00067723804}
+--- !u!4 &718906078 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 952394235770531537, guid: 9bb7f9c23f7422b43902705704c33e5c, type: 3}
+  m_PrefabInstance: {fileID: 1845714496}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &721515850
 GameObject:
   m_ObjectHideFlags: 0
@@ -20451,11 +20456,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1681465611}
   m_Mesh: {fileID: 6416302070336371891, guid: bd4c4fb21d0e2c1498fe5b2eed5b4fbb, type: 3}
---- !u!4 &1691053464 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3144004410390496692, guid: 9bb7f9c23f7422b43902705704c33e5c, type: 3}
-  m_PrefabInstance: {fileID: 1845714496}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1715090419
 GameObject:
   m_ObjectHideFlags: 0
@@ -24954,7 +24954,7 @@ PrefabInstance:
     - target: {fileID: 1781732620236881267, guid: f4ce87887ecfc8148ad31d3c4cd4e48a, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 1691053464}
+      objectReference: {fileID: 0}
     - target: {fileID: 2151981267145346394, guid: f4ce87887ecfc8148ad31d3c4cd4e48a, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -24974,7 +24974,7 @@ PrefabInstance:
     - target: {fileID: 3915187781007535385, guid: f4ce87887ecfc8148ad31d3c4cd4e48a, type: 3}
       propertyPath: playerHandTransform
       value: 
-      objectReference: {fileID: 1691053464}
+      objectReference: {fileID: 718906078}
     - target: {fileID: 4267184968080370441, guid: f4ce87887ecfc8148ad31d3c4cd4e48a, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
