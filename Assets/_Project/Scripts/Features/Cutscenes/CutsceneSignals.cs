@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CutsceneSignals: MonoBehaviour
 {
@@ -55,7 +56,7 @@ public class CutsceneSignals: MonoBehaviour
         // Если cutsceneDataBase не содежит катсцены с cutsceneKey то упоминаем об этом в консоли и не выполняем весь остальной метод
         if (!cutsceneDataBase.ContainsKey(cutsceneKey)) 
         {
-            Debug.LogError($"Катсцены c ключом \"{cutsceneKey}\" нету в cutsceneDataBase");
+            Debug.Log($"Катсцены c ключом \"{cutsceneKey}\" нету в cutsceneDataBase");
             return;
         } 
 
@@ -97,6 +98,17 @@ public class CutsceneSignals: MonoBehaviour
         playerPrefab.transform.position = spawnPoints[num].transform.position;
         playerPrefab.transform.parent = null;
         playerPrefab.GetComponent<Rigidbody>().isKinematic = false;
+    }
+
+    public void SwitchScene()
+    {
+        if (activeCutscene != null)
+        {
+            activeCutscene.SetActive(false);
+            activeCutscene = null;
+            TMP.text = null;
+            SceneManager.LoadScene(2);
+        }
     }
 }
 

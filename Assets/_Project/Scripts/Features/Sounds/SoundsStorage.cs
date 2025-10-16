@@ -9,7 +9,7 @@ namespace _Project.Scripts.Features.Sounds
         {
             if (!Units.TryGetValue(soundId, out storableUnit))
             {
-                Debug.LogError($"Sound ID {soundId} not found!");
+                Debug.Log($"Sound ID {soundId} not found!");
                 return false;
             }
             
