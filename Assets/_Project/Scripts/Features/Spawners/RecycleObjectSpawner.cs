@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Features.Random;
@@ -15,11 +16,11 @@ namespace _Project.Scripts.Features.Spawners
         public Transform spawnTo = null;
         
         [Header("Config")]
-        [Min(0)] public int maxCount;
-        [MinValue(0), MaxValue("maxCount")] public int minCount;
-        [Min(0)] public float spawnDelay = 0f;
+        [Min(0)] public int spawnCount = 10;
+        [MinValue(0), MaxValue("spawnCount")] public int recycleCount = 1;
+        [Min(0)] public float spawnDelay = 5f;
         public bool isFirstSpawnDelayed = false;
-        public float offsetDistance = 0.2f;
+        public float offsetDistance = 2f;
         public SpawnRotationVariant spawnRotationVariant = SpawnRotationVariant.AsPrefab;
         public RandomProvider.RandomRotationAxis randomRotationAxis = new(false, false, true);
         
@@ -27,6 +28,7 @@ namespace _Project.Scripts.Features.Spawners
         private readonly HashSet<GameObject> _spawnedObjects = new();
         private RandomProvider _randomProvider;
         private float _timeFromLastSpawn = 0f;
+        private bool _isRecycleSpawnActive = false;
 
         public enum SpawnRotationVariant
         {
@@ -40,37 +42,49 @@ namespace _Project.Scripts.Features.Spawners
             _timeFromLastSpawn = spawnDelay;
             
             _randomProvider = FindAnyObjectByType<RandomProvider>();
-            _points = pointsContainer.GetComponentsInChildren<Transform>();
+            _points = pointsContainer
+                .GetComponentsInChildren<Transform>()
+                .Where(t => t != pointsContainer)
+                .ToArray();
             
-            HandleFirstSpawn();
+            StartCoroutine(HandleFirstSpawn());
         }
 
-        private void HandleFirstSpawn()
+        private IEnumerator HandleFirstSpawn()
         {
-            if (isFirstSpawnDelayed) return;
-
-            for (var i = 0; i < maxCount; i++)
+            for (var i = 0; i < spawnCount; i++)
             {
+                if (destroyCancellationToken.IsCancellationRequested) yield break;
                 TrySpawn();
+
+                if (!isFirstSpawnDelayed) continue;
+                
+                var t = 0f;
+                while (t < spawnDelay)
+                {
+                    if (destroyCancellationToken.IsCancellationRequested) yield break;
+                    yield return null;
+                    t += Time.deltaTime;
+                }
             }
             
+            _isRecycleSpawnActive = true;
             _timeFromLastSpawn = 0f;
         }
 
         public void Update()
         {
-            _spawnedObjects.RemoveWhere(x => x is null);
-
+            if (!_isRecycleSpawnActive) return;
+            
             if (_timeFromLastSpawn < spawnDelay)
             {
                 _timeFromLastSpawn += Time.deltaTime;
                 return;
             }
+            
+            _spawnedObjects.RemoveWhere(x => x == null);
 
-            if (_spawnedObjects.Count == maxCount)
-            {
-                return;
-            }
+            if (_spawnedObjects.Count >= recycleCount) return;
 
             if (TrySpawn())
             {
