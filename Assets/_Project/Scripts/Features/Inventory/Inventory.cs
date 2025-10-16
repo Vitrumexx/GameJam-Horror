@@ -40,6 +40,13 @@ namespace _Project.Scripts.Features.Inventory
         private static readonly string PickUpHintOverlayTag = "PickUpHintOverlay";
         private static readonly string DropHintOverlayTag = "DropHintOverlay";
 
+        public void SetupInventoryConfig(InventoryConfig inventoryConfig)
+        {
+            HideInventory();
+            config = inventoryConfig;
+            ShowInventory();
+        }
+        
         private void Start()
         {
             _enemyNotifier = FindAnyObjectByType<EnemyNotifier>();
@@ -91,6 +98,11 @@ namespace _Project.Scripts.Features.Inventory
 
         private void HideInventory()
         {
+            foreach (var inventoryItem in _inventory.Where(x => x.Value.Item is not null))
+            {
+                DropItem(inventoryItem.Key);
+            }
+            
             _isInventoryVisible = false;
             _inventory.Clear();
             inventoryUIStorage.gameObject.SetActive(false);
