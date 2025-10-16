@@ -1206,6 +1206,8 @@ MonoBehaviour:
   playerOverlay: {fileID: 2702660830082343458}
   playerNotifier: {fileID: 898744336401132983}
   interactKey: 102
+  blinkColor: {r: 1, g: 0, b: 0.028469086, a: 1}
+  blinkDuration: 2
 --- !u!1 &5782048118571140654
 GameObject:
   m_ObjectHideFlags: 0
@@ -1694,5 +1696,50 @@ Transform:
   - {fileID: 4119703094844240726}
   - {fileID: 6194221915450858520}
   - {fileID: 8148880399772443966}
+  - {fileID: 5631376308033614672}
   m_Father: {fileID: 1747264224737663548}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8433794610899042470
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5631376308033614672}
+  - component: {fileID: 3030276278696527476}
+  m_Layer: 0
+  m_Name: MaterialBlinker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5631376308033614672
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8433794610899042470}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6315434357867925086}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3030276278696527476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8433794610899042470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6150b918ea72479bb8a6c267784b27b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
