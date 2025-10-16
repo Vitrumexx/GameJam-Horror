@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace _Project.Scripts.Features.Random
@@ -36,6 +37,13 @@ namespace _Project.Scripts.Features.Random
         public int InRange(int min, int max)
         {
             return _random.Next(min, max);
+        }
+
+        public int Index<T>(ICollection<T> collection)
+        {
+            if (collection == null || collection.Count == 0) return -1;
+        
+            return _random.Next(0, collection.Count);
         }
     }
 }
