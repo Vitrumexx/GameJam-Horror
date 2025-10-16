@@ -1,5 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class CutsceneSignals: MonoBehaviour
@@ -7,10 +7,11 @@ public class CutsceneSignals: MonoBehaviour
     // —оздаЄм Singleton дл€ того чтобы легко обращатс€ к CutsceneManager через CutsceneManager.Instance.ѕубличныйћетод оторый¬амЌужен()
     public static CutsceneSignals Instance;
 
+    public TextMeshProUGUI TMP;
     // Ћист из структур катсцен, в которых есть Key и Value которые в дальнейшем будут заполн€тс€ в Dictionary "cutsceneDataBase"
     // ƒелаем мы это потому что даже публичный Dictionary не отображаетс€ в инспекторе
     [SerializeField] private List<CutsceneStruct> cutscenes = new List<CutsceneStruct>();
-
+    [SerializeField] private List<GameObject> spawnPoints = new List<GameObject>();
     // Ѕаза данных содержаща€ все катсцены которые мы будем создавать, и в дальнейшем можем выт€гивать наши катсцены по ключам
     // “ак как наш Dictionary публичный и статичный мы можем обращатс€ к нему из любого скрипта вот так - CutsceneManager.cutsceneDataBase[" люч нужной катсцены"]
     public static Dictionary<string, GameObject> cutsceneDataBase = new Dictionary<string, GameObject>();
@@ -87,12 +88,15 @@ public class CutsceneSignals: MonoBehaviour
         {
             activeCutscene.SetActive(false);
             activeCutscene = null;
+            TMP.text = null;
         }
     }
 
-    public void RecreatePlayer()
+    public void SpawnPlayer(int num)
     {
-
+        playerPrefab.transform.position = spawnPoints[num].transform.position;
+        playerPrefab.transform.parent = null;
+        playerPrefab.GetComponent<Rigidbody>().isKinematic = false;
     }
 }
 
