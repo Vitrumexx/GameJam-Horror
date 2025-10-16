@@ -37,7 +37,7 @@ namespace _Project.Scripts.Features.Items.Weapon
             _item.OnDrop += HideWeaponHint;
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             HandleAttack();
         }
@@ -62,7 +62,7 @@ namespace _Project.Scripts.Features.Items.Weapon
 
         private void ShowWeaponHint()
         {
-            var message = $"Press \"{attackKey}\" to attack.";
+            var message = $"Press \"{attackKey}\" to attack";
 
             _playerOverlay.UpdateData(OverlayTag, message);
         }
