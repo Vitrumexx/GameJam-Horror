@@ -38,7 +38,7 @@ namespace _Project.Scripts.Features.Player
         private Vector3 _originalScale;
         private RectTransform _rect;
         private RandomProvider _randomProvider;
-        private Dictionary<string, UITaskArea> _tasks;
+        private Dictionary<string, UITaskArea> _tasks = new();
 
         private void Awake()
         {

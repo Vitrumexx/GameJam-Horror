@@ -287,6 +287,7 @@ MonoBehaviour:
   infoArea: {fileID: 1484142590722117405}
   taskTransform: {fileID: 5527472992451597555}
   taskPrefab: {fileID: 2560011902875583632, guid: a65ecd3ebb85de249b16c6dc8c87330f, type: 3}
+  hideOnSolved: 0
   animationMode: 1
   appearDuration: 0.35
   disappearDuration: 0.2

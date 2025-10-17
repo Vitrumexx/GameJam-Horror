@@ -2,11 +2,8 @@ using UnityEngine;
 
 public class UIHider : MonoBehaviour
 {
-    void FixedUpdate()
+    void Update()
     {
-        if (CutsceneSignals.activeCutscene != null)
-            gameObject.SetActive(false);
-        else
-            gameObject.SetActive(true);
+        gameObject.SetActive(!CutsceneSignals.activeCutscene);
     }
 }

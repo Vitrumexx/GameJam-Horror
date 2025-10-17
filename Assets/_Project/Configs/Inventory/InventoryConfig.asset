@@ -17,4 +17,4 @@ MonoBehaviour:
   inventoryCapacity: 3
   pickUpItemKey: 101
   dropItemKey: 113
-  pickUpDistance: 5
+  pickUpDistance: 10

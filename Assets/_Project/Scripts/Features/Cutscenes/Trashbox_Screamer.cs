@@ -1,32 +1,17 @@
+using _Project.Scripts.Features.Tasks;
 using TMPro;
-using UnityEngine;
 
-public class Trashbox_Screamer : MonoBehaviour
+public class Trashbox_Screamer : MonoTask
 {
     public TextMeshProUGUI TMPtext;
-    private bool PlayerInZone = false;
     public TaskCounter counter;
-    void Update()
+    
+    public void StartScreaming()
     {
-        if (PlayerInZone)
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                CutsceneSignals.Instance.StartCutscene("Trashbox_Screamer");
-                counter.TaskCompleted += 1;
-                Destroy(gameObject);
-            }
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-            PlayerInZone = true;
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-            PlayerInZone = false;
+        PlayerNotifier.UpdateTask(taskId, true);
+        
+        CutsceneSignals.Instance.StartCutscene("Trashbox_Screamer");
+        counter.TaskCompleted += 1;
     }
 
     public void Phrase()
