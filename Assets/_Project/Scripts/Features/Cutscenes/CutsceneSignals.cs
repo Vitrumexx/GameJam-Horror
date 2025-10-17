@@ -11,7 +11,6 @@ public class CutsceneSignals: MonoBehaviour
     public static CutsceneSignals Instance;
 
     public GameObject UI;
-    public GameObject trashBag;
 
     public TextMeshProUGUI TMP;
     // ���� �� �������� �������, � ������� ���� Key � Value ������� � ���������� ����� ���������� � Dictionary "cutsceneDataBase"
