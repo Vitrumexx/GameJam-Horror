@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 
 public class CutsceneSignals: MonoBehaviour
@@ -36,7 +37,12 @@ public class CutsceneSignals: MonoBehaviour
 
     private void Update()
     {
-        if (!Input.GetKeyDown(skipKey))
+        HandleSceneSkip();
+    }
+
+    private void HandleSceneSkip()
+    {
+        if (!Input.GetKey(skipKey))
         {
             _skipTimeElapsed = 0f;
             return;
@@ -49,7 +55,15 @@ public class CutsceneSignals: MonoBehaviour
         }
         
         _skipTimeElapsed = 0f;
-        EndCutscene();
+        SkipCutscene();
+    }
+
+    private void SkipCutscene()
+    {
+        if (ActiveCutscene is null) return;
+        if (!ActiveCutscene.TryGetComponent<PlayableDirector>(out var director)) return;
+        
+        director.time = director.duration;
     }
 
     private void ShowSkipHint()

@@ -21917,6 +21917,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -75.7
       objectReference: {fileID: 0}
+    - target: {fileID: 4873260600438769679, guid: 9bb7f9c23f7422b43902705704c33e5c, type: 3}
+      propertyPath: cheatCode
+      value: aezakmi
+      objectReference: {fileID: 0}
+    - target: {fileID: 4873260600438769679, guid: 9bb7f9c23f7422b43902705704c33e5c, type: 3}
+      propertyPath: cheatMultiplier
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
