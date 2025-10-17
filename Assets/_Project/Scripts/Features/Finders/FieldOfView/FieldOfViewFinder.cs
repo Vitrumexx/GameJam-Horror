@@ -5,7 +5,7 @@ namespace _Project.Scripts.Features.Finders.FieldOfView
     public class FieldOfViewFinder : MonoBehaviour
     {
         [Header("View Settings")]
-        [SerializeField] private float viewRadius = 10f;
+        public float viewRadius = 10f;
         [SerializeField, Range(0, 360)] private float viewAngle = 90f;
         [SerializeField] private Axis viewDirectionAxis = Axis.Z;
         [SerializeField] private bool invertAxis = false;

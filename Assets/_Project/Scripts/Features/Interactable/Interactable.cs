@@ -41,6 +41,8 @@ namespace _Project.Scripts.Features.Interactable
 
             if (isChangeIsInteractableOnInteract) isInteractable = false;
 
+            if (interactCondition != InteractConditions.OnItemInInventory) return;
+            
             if (!isDelItemOnUse) return;
             
             _inventory.DropItem(_selectedItem.Key);

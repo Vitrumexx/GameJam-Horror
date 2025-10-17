@@ -129,6 +129,8 @@ MonoBehaviour:
   id: lamp
   isPickupable: 1
   localScaleModifierOnPickUp: 0.5
+  messageOnPickup: 
+  isOnlyOnFirstPickup: 0
 --- !u!114 &4956347808721175655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,9 +146,10 @@ MonoBehaviour:
   attackKey: 323
   damagableTags: []
   destroyOnImpact: 0
-  destroyOnLifeTime: 0
-  lifetime: 5
+  destroyOnLifeTime: 1
+  lifetime: 1
   throwForce: 20
+  isTurnOffTheDangerZoneOnZeroVelocity: 1
 --- !u!65 &6620362409471556776
 BoxCollider:
   m_ObjectHideFlags: 0
