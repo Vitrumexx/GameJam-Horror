@@ -10,8 +10,11 @@ public class Manor_Trigger : MonoBehaviour
     void Update()
     {
         if (PlayerInZone)
-                CutsceneSignals.Instance.StartCutscene("Manor_Monologue");
-                Destroy(gameObject);
+        {
+            CutsceneSignals.Instance.StartCutscene("Manor_Monologue");
+            Destroy(gameObject);
+        }
+            
     }
 
     void OnTriggerEnter(Collider other)

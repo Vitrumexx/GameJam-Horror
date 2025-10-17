@@ -118,6 +118,17 @@ public class CutsceneSignals: MonoBehaviour
             SceneManager.LoadScene(2);
         }
     }
+
+    public void Victory()
+    {
+        if (activeCutscene != null)
+        {
+            activeCutscene.SetActive(false);
+            activeCutscene = null;
+            TMP.text = null;
+            SceneManager.LoadScene(0);
+        }
+    }
 }
 
 // ��������� ������� ��� �����, ����� ����� ����������� ��� �������� � Key � Value � Dictionary cutsceneDataBase
