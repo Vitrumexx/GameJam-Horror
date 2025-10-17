@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using _Project.Scripts.Features.Random;
 using _Project.Scripts.Features.UI;
 using UnityEngine;
@@ -197,6 +198,13 @@ namespace _Project.Scripts.Features.Player
             if (!_tasks.Remove(taskId, out var task)) return;
             
             Destroy(task.gameObject);
+        }
+
+        public void ClearTasks()
+        {
+            var ids = _tasks.Keys.ToArray();
+            
+            foreach (var id in ids) RemoveTask(id);
         }
     }
 }
