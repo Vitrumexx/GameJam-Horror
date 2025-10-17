@@ -1,105 +1,275 @@
-﻿using UnityEngine;
+﻿using _Project.Scripts.Features.Finders.FieldOfView;
+using UnityEngine;
 using UnityEngine.AI;
 
 public class HunterBehavior : MonoBehaviour
 {
-    public float chaseDistance = 30f;
-    public float attackDistance = 10f;
-    public float rotationSpeed = 10f;
+    [Header("Distances")]
+    [SerializeField] private float chaseDistance = 30f;
+    [SerializeField] private float attackDistance = 10f;
 
-    public Transform[] patrolPoints;
-    public Animator animator;
+    [Header("Speeds")]
+    [SerializeField] private float patrolSpeed = 3.5f;
+    [SerializeField] private float chaseSpeed = 5f;
+    [SerializeField] private float rotationSpeed = 10f;
+
+    [Header("Patrol Settings")]
+    [SerializeField] private Transform[] patrolPoints;
+    [SerializeField] private float waitTimeAtPatrolPoint = 2f;
+
+    [Header("Memory Settings")]
+    [SerializeField] private float memoryTime = 3f;
+
+    [Header("Stun Settings")]
+    [SerializeField] private float stunDuration = 2f;
+
+    [Header("Components")]
+    [SerializeField] private FieldOfViewFinder finder;
+    [SerializeField] private Animator animator;
+    [SerializeField] private Transform modelRoot;
+    [SerializeField] private GameObject playerUi;
+    [SerializeField] private GameObject defeatScreen;
 
     private NavMeshAgent agent;
     private Transform player;
-    private bool isChasing;
+    private Vector3 lastKnownPlayerPosition;
+    private float waitTimer;
+    private float memoryTimer;
+    private float stunTimer;
     private int currentPatrolIndex;
+    private bool isChasing;
+    private bool isWaiting;
 
+    private enum State { Patrol, Chase, Attack, Investigate, Stunned }
+    private State currentState;
 
-    public Transform modelRoot;
-
-    
-
-    void Start()
+    private void Start()
     {
+        finder.viewRadius = chaseDistance;
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
-        // Управляем вращением вручную
+        if (finder == null)
+        {
+            Debug.LogWarning($"FieldOfViewFinder not assigned on {gameObject.name}!");
+        }
+
+        if (animator == null)
+        {
+            Debug.LogWarning($"Animator not assigned on {gameObject.name}!");
+        }
+
+        if (modelRoot == null)
+        {
+            modelRoot = transform;
+        }
+
         agent.updateRotation = false;
         agent.updatePosition = true;
 
+        currentState = State.Patrol;
         GoToNextPatrolPoint();
     }
 
-    void Update()
+    private void Update()
     {
-        float distanceToPlayer = Vector3.Distance(player.position, transform.position);
-
-        if (distanceToPlayer <= attackDistance)
+        if (currentState == State.Stunned)
         {
-            Attack();
-        }
-        else if (distanceToPlayer <= chaseDistance)
-        {
-            Chase();
+            stunTimer -= Time.deltaTime;
+            if (stunTimer <= 0)
+            {
+                currentState = State.Patrol;
+                agent.enabled = true;
+                GoToNextPatrolPoint();
+            }
         }
         else
         {
-            Patrol();
+            switch (currentState)
+            {
+                case State.Patrol:
+                    Patrol();
+                    break;
+                case State.Chase:
+                    Chase();
+                    break;
+                case State.Attack:
+                    Attack();
+                    break;
+                case State.Investigate:
+                    Investigate();
+                    break;
+            }
+
+            RotateTowardsMovementDirection();
         }
 
-        RotateTowardsMovementDirection();
-
-        animator.SetFloat("Speed", agent.velocity.magnitude);
+        UpdateAnimator();
     }
 
-    void Patrol()
+    private void Patrol()
     {
-        agent.speed = 3.5f;
-        isChasing = false;
+        agent.speed = patrolSpeed;
 
-        if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        if (isWaiting)
         {
-            GoToNextPatrolPoint();
+            waitTimer -= Time.deltaTime;
+            if (waitTimer <= 0)
+            {
+                isWaiting = false;
+                GoToNextPatrolPoint();
+            }
+        }
+        else if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        {
+            isWaiting = true;
+            waitTimer = waitTimeAtPatrolPoint;
+            agent.SetDestination(transform.position);
+        }
+
+        if (finder != null && finder.CanSeeTarget && finder.VisibleTarget != null && finder.VisibleTarget.transform == player)
+        {
+            lastKnownPlayerPosition = player.position;
+            memoryTimer = memoryTime;
+            currentState = State.Chase;
+            isChasing = true;
         }
     }
 
-    void GoToNextPatrolPoint()
+    private void GoToNextPatrolPoint()
     {
         if (patrolPoints.Length == 0) return;
-        currentPatrolIndex = Random.Range(0, patrolPoints.Length);
+
+        int newIndex;
+        do
+        {
+            newIndex = Random.Range(0, patrolPoints.Length);
+        } while (newIndex == currentPatrolIndex && patrolPoints.Length > 1);
+
+        currentPatrolIndex = newIndex;
         agent.SetDestination(patrolPoints[currentPatrolIndex].position);
     }
 
-    void Chase()
+    private void Chase()
     {
-        agent.speed = 5f;
-        isChasing = true;
-        agent.SetDestination(player.position);
+        agent.speed = chaseSpeed;
+
+        if (finder != null && finder.CanSeeTarget && finder.VisibleTarget != null && finder.VisibleTarget.transform == player)
+        {
+            float distanceToPlayer = Vector3.Distance(player.position, transform.position);
+            lastKnownPlayerPosition = player.position;
+            memoryTimer = memoryTime;
+
+            if (distanceToPlayer <= attackDistance)
+            {
+                currentState = State.Attack;
+            }
+            else
+            {
+                agent.SetDestination(player.position);
+            }
+        }
+        else
+        {
+            memoryTimer -= Time.deltaTime;
+            if (memoryTimer <= 0)
+            {
+                currentState = State.Investigate;
+                agent.SetDestination(lastKnownPlayerPosition);
+            }
+        }
     }
 
-    void Attack()
+    private void Attack()
     {
         agent.SetDestination(transform.position);
-        animator.SetTrigger("Attack");
+
+        if (finder != null && finder.CanSeeTarget && finder.VisibleTarget != null && finder.VisibleTarget.transform == player)
+        {
+            float distanceToPlayer = Vector3.Distance(player.position, transform.position);
+            lastKnownPlayerPosition = player.position;
+            memoryTimer = memoryTime;
+
+            if (distanceToPlayer > attackDistance)
+            {
+                currentState = State.Chase;
+            }
+            else
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+                playerUi.SetActive(false);
+                defeatScreen.SetActive(true);
+            }
+        }
+        else
+        {
+            memoryTimer -= Time.deltaTime;
+            if (memoryTimer <= 0)
+            {
+                currentState = State.Investigate;
+                agent.SetDestination(lastKnownPlayerPosition);
+            }
+        }
     }
 
-    void RotateTowardsMovementDirection()
+    private void Investigate()
+    {
+        agent.speed = patrolSpeed;
+
+        if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        {
+            currentState = State.Patrol;
+            isChasing = false;
+            GoToNextPatrolPoint();
+        }
+        else if (finder != null && finder.CanSeeTarget && finder.VisibleTarget != null && finder.VisibleTarget.transform == player)
+        {
+            lastKnownPlayerPosition = player.position;
+            memoryTimer = memoryTime;
+            currentState = State.Chase;
+        }
+    }
+
+    private void RotateTowardsMovementDirection()
     {
         Vector3 direction;
 
-        if (agent.hasPath && agent.remainingDistance > 0.1f)
+        if (currentState == State.Attack && finder != null && finder.CanSeeTarget && finder.VisibleTarget != null && finder.VisibleTarget.transform == player)
+        {
+            direction = (player.position - transform.position).normalized;
+        }
+        else if (agent.hasPath && agent.remainingDistance > 0.1f)
+        {
             direction = (agent.steeringTarget - transform.position).normalized;
+        }
         else
+        {
             direction = agent.velocity.normalized;
+        }
 
         direction.y = 0;
 
-        if (direction.sqrMagnitude > 0.001f)
+        if (direction.sqrMagnitude > 0.01f)
         {
             Quaternion lookRotation = Quaternion.LookRotation(direction);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
         }
+    }
+
+    private void UpdateAnimator()
+    {
+        animator.SetFloat("Speed", currentState == State.Stunned ? 0 : agent.velocity.magnitude);
+        // animator.SetBool("IsChasing", isChasing && currentState != State.Stunned);
+        // animator.SetBool("IsAttacking", currentState == State.Attack);
+        // animator.SetBool("IsStunned", currentState == State.Stunned);
+    }
+
+    public void Stun(float duration)
+    {
+        stunTimer = duration > 0 ? duration : stunDuration;
+        currentState = State.Stunned;
+        agent.enabled = false;
+        isChasing = false;
     }
 }

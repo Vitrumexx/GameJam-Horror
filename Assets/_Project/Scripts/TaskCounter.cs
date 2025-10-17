@@ -1,24 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
+using _Project.Scripts.Features.Interactable;
+using _Project.Scripts.Features.Player;
 using UnityEngine;
 
 public class TaskCounter : MonoBehaviour
 {
     public int TotalTasks = 2;
-    public int TaskCompleted;
-    public GameObject DepartureScriptableZone;
+    public Departure departure;
+
+    private int _taskCompleted = 0;
     
-    private void Start()
+    public int TaskCompleted
     {
-        TaskCompleted = 0;
-        DepartureScriptableZone.SetActive(false);   
-    }
-    
-    private void Update()
-    {
-        if (TaskCompleted >= TotalTasks)
+        get => _taskCompleted;
+        set
         {
-            DepartureScriptableZone.SetActive(true);
+            _taskCompleted = value;
+            
+            if (TaskCompleted >= TotalTasks)
+            {
+                departure.GetComponent<FuncInvokerInteractable>().isInteractable = true;
+                
+                var playerNotification = FindAnyObjectByType<PlayerNotifier>();    
+                playerNotification?.ClearTasks();
+                playerNotification?.AddTask("abobababa", "Go back to the car", false);
+            }
         }
     }
 }

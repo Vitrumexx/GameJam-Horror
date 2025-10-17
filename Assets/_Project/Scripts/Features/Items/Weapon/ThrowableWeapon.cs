@@ -1,4 +1,5 @@
 using System.Linq;
+using _Project.Scripts.Features.Damagables;
 using _Project.Scripts.Features.Player;
 using UnityEngine;
 using _Project.Scripts.Features.Shared;
@@ -72,9 +73,10 @@ namespace _Project.Scripts.Features.Items.Weapon
         {
             if (!_isThrown || !_isDangerZoneActive) return;
 
-            if (collision.collider.TryGetComponent(out Damagable damagable) 
-                && damagableTags.Contains(damagable.damagableTag))
+            if (collision.collider.TryGetComponent(out Damagable damagable))
             {
+                if (damagableTags.Length > 0 && !damagableTags.Contains(damagable.damagableTag)) return;
+                
                 damagable.OnDamage();
             }
 
