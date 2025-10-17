@@ -1,104 +1,132 @@
 using System.Collections.Generic;
-using _Project.Scripts.Features.Inventory;
-using _Project.Scripts.Features.Items;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 
 public class CutsceneSignals: MonoBehaviour
 {
-    // ������ Singleton ��� ���� ����� ����� ��������� � CutsceneManager ����� CutsceneManager.Instance.�����������������������������()
     public static CutsceneSignals Instance;
 
     public GameObject UI;
     public TextMeshProUGUI TMP;
-    // ���� �� �������� �������, � ������� ���� Key � Value ������� � ���������� ����� ���������� � Dictionary "cutsceneDataBase"
-    // ������ �� ��� ������ ��� ���� ��������� Dictionary �� ������������ � ����������
     [SerializeField] private List<CutsceneStruct> cutscenes = new List<CutsceneStruct>();
     [SerializeField] private List<GameObject> spawnPoints = new List<GameObject>();
-    // ���� ������ ���������� ��� �������� ������� �� ����� ���������, � � ���������� ����� ���������� ���� �������� �� ������
-    // ��� ��� ��� Dictionary ��������� � ��������� �� ����� ��������� � ���� �� ������ ������� ��� ��� - CutsceneManager.cutsceneDataBase["���� ������ ��������"]
     public static Dictionary<string, GameObject> cutsceneDataBase = new Dictionary<string, GameObject>();
 
-    // ������ � ���� �������� ������� ������������� � ������� ������, ���� �� ����� �������� ������ �� ������������� - ��� ����� null
-    public static GameObject activeCutscene;
-
-    // ������ ������, ����� ����������� ���, ���� �����
     public GameObject playerPrefab;
+    
+    [Header("Hint")]
+    public TextMeshProUGUI skipHintTmp;
+    public KeyCode skipKey = KeyCode.Escape;
+    public float timeToSkip = 2f;
+    
+    public static GameObject ActiveCutscene;
+    private float _skipTimeElapsed = 0f;
+    
     private void Awake()
     {
-        // ������ Singleton
         Instance = this;
-
-        // �������� ����� ������������� ���� ������ � ����������
         InitializeCutsceneDataBase();
 
-        // ���������� �� ���� ��������� � ��������� �� (����� ��� ������� ���� �� ����������� ��������)
         foreach (var cutscene in cutsceneDataBase)
         {
             cutscene.Value.SetActive(false);
         }
     }
 
-    // ����� � ������� �� ��������� Dictionary cutsceneDataBase
+    private void Update()
+    {
+        HandleSceneSkip();
+    }
+
+    private void HandleSceneSkip()
+    {
+        if (!Input.GetKey(skipKey))
+        {
+            _skipTimeElapsed = 0f;
+            return;
+        }
+
+        if (_skipTimeElapsed < timeToSkip)
+        {
+            _skipTimeElapsed += Time.deltaTime;
+            return;
+        }
+        
+        _skipTimeElapsed = 0f;
+        SkipCutscene();
+    }
+
+    private void SkipCutscene()
+    {
+        if (ActiveCutscene is null) return;
+        if (!ActiveCutscene.TryGetComponent<PlayableDirector>(out var director)) return;
+        
+        director.time = director.duration;
+    }
+
+    private void ShowSkipHint()
+    {
+        skipHintTmp.gameObject.SetActive(true);
+        skipHintTmp.text = $"To skip cutscene hold {skipKey}.";
+    }
+
+    private void HideSkipHint()
+    {
+        skipHintTmp.gameObject.SetActive(false);
+    }
+
     private void InitializeCutsceneDataBase()
     {
-        // ����� ����������� �� ������ ������ ������� ���� ���� ������
         cutsceneDataBase.Clear();
 
-        // ��������� cutsceneDataBase ������� � ���������� ������� �� ������ � ����� cutscenes
         for (int i = 0; i < cutscenes.Count; i++)
         {           
             cutsceneDataBase.Add(cutscenes[i].cutsceneKey, cutscenes[i].cutsceneObject);
         }
     }
 
-    // ����� ��� ��������� �������� �� �����
     public void StartCutscene(string cutsceneKey)
     {
-        // ���� cutsceneDataBase �� ������� �������� � cutsceneKey �� ��������� �� ���� � ������� � �� ��������� ���� ��������� �����
         if (!cutsceneDataBase.ContainsKey(cutsceneKey)) 
         {
-            Debug.Log($"�������� c ������ \"{cutsceneKey}\" ���� � cutsceneDataBase");
+            Debug.Log($"Scene \"{cutsceneKey}\" isn't in the cutsceneDataBase.");
             return;
         } 
 
-        // ���� ������ ������������� �������� � �� �������� ������� � ���� ������ Ũ �� �� ������ �������� ���������� ������
-        if (activeCutscene != null)
+        if (ActiveCutscene != null)
         {
-            if (activeCutscene == cutsceneDataBase[cutsceneKey])
+            if (ActiveCutscene == cutsceneDataBase[cutsceneKey])
             {
                 return;
             }
         }
         
         UI.gameObject.SetActive(false);
+        ActiveCutscene = cutsceneDataBase[cutsceneKey];
 
-        // ����������� �������� ��������
-        activeCutscene = cutsceneDataBase[cutsceneKey];
-
-        // ��������� ��� ��������
         foreach (var cutscene in cutsceneDataBase)
         {
             cutscene.Value.SetActive(false);
         }
 
-        // �������� �� �������� ������� ����� �������
         cutsceneDataBase[cutsceneKey].SetActive(true);
+        ShowSkipHint();
     }
 
-    // ����� ������� ��������� ������� ��������
     public void EndCutscene()
     {
-        if (activeCutscene != null)
+        if (ActiveCutscene != null)
         {
-            activeCutscene.SetActive(false);
-            activeCutscene = null;
+            ActiveCutscene.SetActive(false);
+            ActiveCutscene = null;
             TMP.text = null;
             playerPrefab.GetComponent<AudioSource>().enabled = true;
         }
         
         UI.gameObject.SetActive(true);
+        HideSkipHint();
     }
 
     public void SpawnPlayer(int num)
@@ -110,10 +138,10 @@ public class CutsceneSignals: MonoBehaviour
 
     public void SwitchScene()
     {
-        if (activeCutscene != null)
+        if (ActiveCutscene != null)
         {
-            activeCutscene.SetActive(false);
-            activeCutscene = null;
+            ActiveCutscene.SetActive(false);
+            ActiveCutscene = null;
             TMP.text = null;
             SceneManager.LoadScene(2);
         }
@@ -121,17 +149,16 @@ public class CutsceneSignals: MonoBehaviour
 
     public void Victory()
     {
-        if (activeCutscene != null)
+        if (ActiveCutscene != null)
         {
-            activeCutscene.SetActive(false);
-            activeCutscene = null;
+            ActiveCutscene.SetActive(false);
+            ActiveCutscene = null;
             TMP.text = null;
             SceneManager.LoadScene(0);
         }
     }
 }
 
-// ��������� ������� ��� �����, ����� ����� ����������� ��� �������� � Key � Value � Dictionary cutsceneDataBase
 [System.Serializable]
 public struct CutsceneStruct
 {
