@@ -46,7 +46,7 @@ namespace _Project.Scripts.Features.Inventory
             config = inventoryConfig;
             ShowInventory();
         }
-        
+
         private void Start()
         {
             _enemyNotifier = FindAnyObjectByType<EnemyNotifier>();
@@ -223,7 +223,7 @@ namespace _Project.Scripts.Features.Inventory
             playerOverlay.RemoveData(DropHintOverlayTag);
         }
 
-        private void PickUpItem(Item item)
+        public void PickUpItem(Item item)
         {
             if (item is null)
             {

@@ -1,34 +1,19 @@
+using _Project.Scripts.Features.Tasks;
 using TMPro;
 using UnityEngine;
 
-public class CashierDialogue : MonoBehaviour
+public class CashierDialogue : MonoTask
 {
     public GameObject player;
     public TextMeshProUGUI TMPtext;
-    private bool PlayerInZone = false;
     public TaskCounter counter;
 
-    void Update()
+    public void OnDialogue()
     {
-        if (PlayerInZone)
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                CutsceneSignals.Instance.StartCutscene("CashierDialogue");
-                counter.TaskCompleted += 1;
-                Destroy(gameObject);
-            }
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-            PlayerInZone = true;
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-            PlayerInZone = false;
+        PlayerNotifier.UpdateTask(taskId, true);
+        
+        CutsceneSignals.Instance.StartCutscene("CashierDialogue");
+        counter.TaskCompleted += 1;
     }
 
     public void Phrase()

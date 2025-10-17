@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using _Project.Scripts.Features.Inventory;
+using _Project.Scripts.Features.Items;
 using UnityEngine;
 
 public class CutsceneTest : MonoBehaviour
