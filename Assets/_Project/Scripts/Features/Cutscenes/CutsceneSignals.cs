@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using _Project.Scripts.Features.Inventory;
-using _Project.Scripts.Features.Items;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,9 +13,15 @@ public class CutsceneSignals: MonoBehaviour
     [SerializeField] private List<GameObject> spawnPoints = new List<GameObject>();
     public static Dictionary<string, GameObject> cutsceneDataBase = new Dictionary<string, GameObject>();
 
-    public static GameObject activeCutscene;
-
     public GameObject playerPrefab;
+    
+    [Header("Hint")]
+    public TextMeshProUGUI skipHintTmp;
+    public KeyCode skipKey = KeyCode.Escape;
+    public float timeToSkip = 2f;
+    
+    public static GameObject ActiveCutscene;
+    private float _skipTimeElapsed = 0f;
     
     private void Awake()
     {
@@ -28,6 +32,35 @@ public class CutsceneSignals: MonoBehaviour
         {
             cutscene.Value.SetActive(false);
         }
+    }
+
+    private void Update()
+    {
+        if (!Input.GetKeyDown(skipKey))
+        {
+            _skipTimeElapsed = 0f;
+            return;
+        }
+
+        if (_skipTimeElapsed < timeToSkip)
+        {
+            _skipTimeElapsed += Time.deltaTime;
+            return;
+        }
+        
+        _skipTimeElapsed = 0f;
+        EndCutscene();
+    }
+
+    private void ShowSkipHint()
+    {
+        skipHintTmp.gameObject.SetActive(true);
+        skipHintTmp.text = $"To skip cutscene hold {skipKey}.";
+    }
+
+    private void HideSkipHint()
+    {
+        skipHintTmp.gameObject.SetActive(false);
     }
 
     private void InitializeCutsceneDataBase()
@@ -48,16 +81,16 @@ public class CutsceneSignals: MonoBehaviour
             return;
         } 
 
-        if (activeCutscene != null)
+        if (ActiveCutscene != null)
         {
-            if (activeCutscene == cutsceneDataBase[cutsceneKey])
+            if (ActiveCutscene == cutsceneDataBase[cutsceneKey])
             {
                 return;
             }
         }
         
         UI.gameObject.SetActive(false);
-        activeCutscene = cutsceneDataBase[cutsceneKey];
+        ActiveCutscene = cutsceneDataBase[cutsceneKey];
 
         foreach (var cutscene in cutsceneDataBase)
         {
@@ -65,19 +98,21 @@ public class CutsceneSignals: MonoBehaviour
         }
 
         cutsceneDataBase[cutsceneKey].SetActive(true);
+        ShowSkipHint();
     }
 
     public void EndCutscene()
     {
-        if (activeCutscene != null)
+        if (ActiveCutscene != null)
         {
-            activeCutscene.SetActive(false);
-            activeCutscene = null;
+            ActiveCutscene.SetActive(false);
+            ActiveCutscene = null;
             TMP.text = null;
             playerPrefab.GetComponent<AudioSource>().enabled = true;
         }
         
         UI.gameObject.SetActive(true);
+        HideSkipHint();
     }
 
     public void SpawnPlayer(int num)
@@ -89,10 +124,10 @@ public class CutsceneSignals: MonoBehaviour
 
     public void SwitchScene()
     {
-        if (activeCutscene != null)
+        if (ActiveCutscene != null)
         {
-            activeCutscene.SetActive(false);
-            activeCutscene = null;
+            ActiveCutscene.SetActive(false);
+            ActiveCutscene = null;
             TMP.text = null;
             SceneManager.LoadScene(2);
         }
@@ -100,10 +135,10 @@ public class CutsceneSignals: MonoBehaviour
 
     public void Victory()
     {
-        if (activeCutscene != null)
+        if (ActiveCutscene != null)
         {
-            activeCutscene.SetActive(false);
-            activeCutscene = null;
+            ActiveCutscene.SetActive(false);
+            ActiveCutscene = null;
             TMP.text = null;
             SceneManager.LoadScene(0);
         }
