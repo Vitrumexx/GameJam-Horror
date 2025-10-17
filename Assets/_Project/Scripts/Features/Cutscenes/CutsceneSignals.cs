@@ -11,7 +11,6 @@ public class CutsceneSignals: MonoBehaviour
     public static CutsceneSignals Instance;
 
     public GameObject UI;
-
     public TextMeshProUGUI TMP;
     // ���� �� �������� �������, � ������� ���� Key � Value ������� � ���������� ����� ���������� � Dictionary "cutsceneDataBase"
     // ������ �� ��� ������ ��� ���� ��������� Dictionary �� ������������ � ����������
@@ -96,6 +95,7 @@ public class CutsceneSignals: MonoBehaviour
             activeCutscene.SetActive(false);
             activeCutscene = null;
             TMP.text = null;
+            playerPrefab.GetComponent<AudioSource>().enabled = true;
         }
         
         UI.gameObject.SetActive(true);
