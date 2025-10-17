@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb14ad62bd204a4c943dda420093ba03, type: 3}
+  m_Name: PickAxe1
+  m_EditorClassIdentifier: 
+  id: pickaxe_1
+  unitName: Pickaxe 1
+  itemPrefab: {fileID: 423454594372390075, guid: d69f2ef0e2291fa43b2fc1195400a465, type: 3}
+  icon: {fileID: 21300000, guid: f84d6324d1728fa4fa0a2ec482e1a28c, type: 3}
+  itemWeight: 0
+  soundId: 

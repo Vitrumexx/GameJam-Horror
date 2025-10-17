@@ -1,0 +1,98 @@
+using System.Collections.Generic;
+using System.Linq;
+using _Project.Scripts.Features.Player;
+using _Project.Scripts.Features.Shared;
+using Sirenix.OdinInspector;
+using UnityEngine;
+
+namespace _Project.Scripts.Features.Interactable
+{
+    public class InteractableProvider : UnitRegistrator<Interactable>
+    {
+        [Header("Player Info")]
+        public Transform player;
+        public float interactDistance = 3f;
+        
+        [Header("Services")]
+        public PlayerOverlay playerOverlay;
+        public PlayerNotifier playerNotifier;
+        
+        [Header("Config")]
+        public KeyCode interactKey = KeyCode.E;
+        public Color blinkColor = Color.red;
+        public float blinkDuration = 0.2f;
+        
+        private Interactable _closestInteractable;
+        private Interactable _lastInteractable;
+        private bool _isOverlayVisible = false;
+        private static readonly string OverlayTag = "InteractableProvider";
+        
+        private void Update()
+        {
+            SearchForClosestInteractable();
+            SetOverlay();
+            HandleInteract();
+            HandleHighlight();
+        }
+
+        private void SearchForClosestInteractable()
+        {
+            _closestInteractable = Units
+                .Where(x => x is not null)
+                .Where(x => x.isInteractable)
+                .Select(x => new { obj = x, dist = Vector3.SqrMagnitude(player.position - x.transform.position) })
+                .Where(x => x.dist <= interactDistance * interactDistance)
+                .OrderBy(x => x.dist)
+                .Select(x => x.obj)
+                .FirstOrDefault();
+        }
+
+        private void SetOverlay()
+        {
+            if (_closestInteractable is null)
+            {
+                if (!_isOverlayVisible) return;
+                
+                _isOverlayVisible = false;
+                playerOverlay.RemoveData(OverlayTag);
+            }
+            else
+            {
+                if (_isOverlayVisible) return;
+
+                var message = $"Press \"{interactKey}\" to interact";
+                _isOverlayVisible = true;
+                playerOverlay.AddData(OverlayTag, message);
+            }
+        }
+
+        private void HandleInteract()
+        {
+            if (!Input.GetKeyDown(interactKey)) return;
+
+            if (_closestInteractable is null)
+            {
+                playerNotifier.NotifyPlayer("There's nothing nearby that you can interact with.");
+                return;
+            }
+
+            if (!_closestInteractable.IsConditionFulfilled(out var message, out var sprite))
+            {
+                playerNotifier.NotifyPlayer($"Interact aborting: {message}.", sprite);
+                return;
+            }
+            
+            _closestInteractable.ProcessInteract();
+        }
+
+        private void HandleHighlight()
+        {
+            if (_lastInteractable == _closestInteractable) return;
+
+            _lastInteractable?.StopBlink();
+            _closestInteractable?.StartBlink(blinkColor, blinkDuration);
+            
+            _lastInteractable = _closestInteractable;
+        }
+    }
+}
