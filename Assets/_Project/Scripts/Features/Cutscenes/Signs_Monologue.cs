@@ -10,8 +10,11 @@ public class Signs_Monologue : MonoBehaviour
     void Update()
     {
         if (PlayerInZone)
-                CutsceneSignals.Instance.StartCutscene("Signs_Monologue");
-                Destroy(gameObject);
+        {
+            CutsceneSignals.Instance.StartCutscene("Signs_Monologue");
+            Destroy(gameObject);
+        }
+                
     }
 
     void OnTriggerEnter(Collider other)

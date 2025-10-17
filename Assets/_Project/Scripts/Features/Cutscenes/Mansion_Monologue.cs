@@ -33,6 +33,6 @@ public class Mansion_Monologue : MonoBehaviour
 
     public void Phrase6()
     {
-        monologueText.text = "But back to the topic. I'd been driving for about five hours, it was getting dark, and the nearest motel was a hundred miles away. I needed to stop at a gas station. Luckily, I'd planned everything and arrived there with only a few dozen miles of gas left.";
+        monologueText.text = "My escape was a pure miracle. I immediately went to the police and told them what happened. He has been arrested.";
     }
 }
