@@ -7,6 +7,9 @@ public class ManorEnter : MonoBehaviour
     public GameObject door1;
     public GameObject door2;
 
+    public AudioClip music;
+    public AudioSource playerSource;
+
     private GameObject _newDoor1;
     private GameObject _newDoor2;
     
@@ -29,5 +32,8 @@ public class ManorEnter : MonoBehaviour
         _newDoor2.SetActive(false);
         door1.SetActive(true);
         door2.SetActive(true);
+        playerSource.clip = music;
+        playerSource.Play();
+        Destroy(gameObject);
     }
 }
