@@ -7,6 +7,11 @@ namespace _Project.Scripts.Features.Player
     {
         private Rigidbody rb;
 
+        [Header("Admin cheats")] 
+        public string cheatCode = "aezakmi";
+        public float cheatMultiplier = 2f;
+        public int maxBufferSize = 100;
+
         [Header("Camera Movement Variables")]
         public Camera playerCamera;
         public float fov = 60f;
@@ -107,10 +112,22 @@ namespace _Project.Scripts.Features.Player
         // Internal Variables
         private Vector3 jointOriginalPos;
         private float timer = 0;
+        private bool _adminCheatActive = false;
+        private string _cheatCodeBuffer = "";
+
+        // Cheat variables
+        private float originalWalkSpeed;
+        private float originalSprintSpeed;
+        private float originalJumpPower;
 
         private void Awake()
         {
             rb = GetComponent<Rigidbody>();
+
+            // Store original values for cheats
+            originalWalkSpeed = walkSpeed;
+            originalSprintSpeed = sprintSpeed;
+            originalJumpPower = jumpPower;
 
             // Set internal variables
             playerCamera.fieldOfView = fov;
@@ -245,6 +262,10 @@ namespace _Project.Scripts.Features.Player
             #endregion
             #endregion
 
+            #region Cheat Code Handler
+            HandleCheatCode();
+            #endregion
+
             #region Sprint
 
             if(enableSprint)
@@ -334,6 +355,72 @@ namespace _Project.Scripts.Features.Player
             if(enableHeadBob)
             {
                 HeadBob();
+            }
+        }
+
+        private void HandleCheatCode()
+        {
+            if (!Input.anyKeyDown || cheatCode.Length == 0) return;
+            
+            foreach (KeyCode keyCode in System.Enum.GetValues(typeof(KeyCode)))
+            {
+                if (!Input.GetKeyDown(keyCode)) continue;
+                
+                if (keyCode is >= KeyCode.A and <= KeyCode.Z or >= KeyCode.Alpha0 and <= KeyCode.Alpha9)
+                {
+                    var keyChar = KeyCodeToChar(keyCode);
+                    _cheatCodeBuffer += keyChar;
+                    
+                    if (_cheatCodeBuffer.Contains(cheatCode))
+                    {
+                        ChangeCheatMode();
+                        _cheatCodeBuffer = "";
+                        break;
+                    }
+                    
+                    continue;
+                }
+                    
+                _cheatCodeBuffer = "";
+            }
+            
+            if (_cheatCodeBuffer.Length > maxBufferSize)
+            {
+                _cheatCodeBuffer = _cheatCodeBuffer.Substring(_cheatCodeBuffer.Length - maxBufferSize);
+            }
+        }
+        
+        private char KeyCodeToChar(KeyCode keyCode)
+        {
+            return keyCode switch
+            {
+                >= KeyCode.A and <= KeyCode.Z => (char)('a' + (keyCode - KeyCode.A)),
+                >= KeyCode.Alpha0 and <= KeyCode.Alpha9 => (char)('0' + (keyCode - KeyCode.Alpha0)),
+                _ => ' '
+            };
+        }
+
+        private void ChangeCheatMode()
+        {
+            _adminCheatActive = !_adminCheatActive;
+            
+            if (_adminCheatActive)
+            {
+                // Apply cheat multiplier
+                walkSpeed = originalWalkSpeed * cheatMultiplier;
+                sprintSpeed = originalSprintSpeed * cheatMultiplier;
+                jumpPower = originalJumpPower * cheatMultiplier;
+                
+                Debug.Log("Cheat activated! Movement stats boosted.");
+            }
+            else
+            {
+                // Reset to original values
+                walkSpeed = originalWalkSpeed;
+                sprintSpeed = originalSprintSpeed;
+                jumpPower = originalJumpPower;
+                
+                Debug.Log("Cheat deactivated. Movement stats returned to normal.");
             }
         }
 
